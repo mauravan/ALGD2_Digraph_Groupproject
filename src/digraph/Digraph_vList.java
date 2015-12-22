@@ -87,18 +87,24 @@ public class Digraph_vList<V, E> {
 		return null;
 	}
 	
-	public Edge getEdge(){
-		//TODO: can someone fuck up the Graph? Maybe return a clone. Implement
+	public Edge getEdge(Vertex u, Vertex v){
+		for (Edge e : u.adjacencyList) {
+			if(e.origin.equals(u) && e.destination.equals(v)) return e;
+		}
 		return null;
 		
 	}
 	
-	public void removeVertex(){
-		//TODO: can someone fuck up the Graph? Maybe return a clone. implement
+	public void removeVertex(V key){
+		//so sind einfach null referenzen in adjacencyList
+		Vertex tmp = new Vertex(key);
+		vList.remove(tmp);
 	}
 	
-	public void removeEdge(){
-		//TODO: can someone fuck up the Graph? Maybe return a clone. implement
+	public void removeEdge(Edge e){
+		Vertex u = e.origin;
+		Vertex v = e.destination;
+		u.adjacencyList.remove(v);
 	}
 	
 	/**
@@ -109,8 +115,9 @@ public class Digraph_vList<V, E> {
 	 */
 	public void addEdge(int weight, Vertex origin, Vertex destination){
 		//TODO: It seems somewhat bad to always create a new Edge or Vertex
-		if (!origin.adjacencyList.contains(new Edge(weight, origin, destination))) {
-			origin.adjacencyList.add(new Edge(weight, origin, destination));
+		Edge e = new Edge(weight, origin, destination);
+			if (!origin.adjacencyList.contains(e)) {
+			origin.adjacencyList.add(e);
 			m_size_E++;
 		}
 	}
@@ -121,14 +128,8 @@ public class Digraph_vList<V, E> {
 	 * @return true if key is already present in the Graph. false otherwise.
 	 */
 	public boolean containsVertex(V key){
-		//TODO: Discuss in team if this is efficient enough.
 		Vertex tmp = new Vertex(key);
-		for (Vertex vertex : vList) {
-			if (vertex.equals(tmp)) {
-				return true;
-			}
-		}
-		return false;
+		return vList.contains(tmp);
 	}
 	
 	/**
@@ -169,14 +170,10 @@ public class Digraph_vList<V, E> {
 		//						Cons - Is a frequently used Method and not very efficient i'd say.
 		//Maybe we can do this with stream framework?
 		List<Vertex> l = new LinkedList<>();
-		for (Vertex vertex : vList) {
-			if (vertex.equals(v)) {
-				for (Edge e : vertex.adjacencyList) {
-					l.add(e.destination);
-				}
-			}
+			for(Edge e : v.adjacencyList){
+			l.add(e.destination);
 		}
-		return null;
+		return l;
 	}
 	
 	/**
@@ -224,7 +221,7 @@ public class Digraph_vList<V, E> {
 
 	
 	/**
-	 * Having an explicit Edge Class allowes for Storage of extra Information about them.
+	 * Having an explicit Edge Class allows for Storage of extra Information about them.
 	 * 
 	 * @author Roman
 	 *
