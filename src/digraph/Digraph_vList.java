@@ -258,10 +258,7 @@ public class Digraph_vList<V, E> {
 		public boolean equals(Object o){
 			//TODO: In Case multiedges are allowed. Change this. Also add check if weight is equal.
 			//TODO: Fix unchecked type safety
-			if (origin.equals(((Edge) o).origin) && destination.equals(((Edge)o).destination)) {
-				return true;
-			}
-			return false;
+			return (origin.equals(((Edge) o).origin) && destination.equals(((Edge)o).destination));
 		}
 		
 	}
