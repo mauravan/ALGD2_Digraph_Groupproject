@@ -60,6 +60,7 @@ public class Digraph_vList<V, E> {
 	 * 
 	 * @param size sets the Size of the Datastructure
 	 */
+	//TODO: without param.
 	public Digraph_vList(int size){
 		vList = new ArrayList<>(size);
 		m_size = 0;
@@ -70,6 +71,7 @@ public class Digraph_vList<V, E> {
 	 * Adds a Vertex into the Graph.
 	 * @param key Type of the vertex.
 	 */
+	//TODO: Overload with Vertex
 	public void addVertex(V key){
 		if (!containsVertex(key)) {
 			vList.add(new Vertex(key));
@@ -77,6 +79,7 @@ public class Digraph_vList<V, E> {
 		}
 	}
 	
+	//TODO: Add Javadoc
 	public Vertex getVertex(V key){
 		//TODO: can someone fuck up the Graph? Maybe return a clone
 		for (Vertex vertex : vList) {
@@ -87,6 +90,8 @@ public class Digraph_vList<V, E> {
 		return null;
 	}
 	
+	
+	//TODO: Do javadoc. Adjust to hashmap.
 	public Edge getEdge(Vertex u, Vertex v){
 		for (Edge e : u.adjacencyList) {
 			if(e.origin.equals(u) && e.destination.equals(v)) return e;
@@ -95,12 +100,14 @@ public class Digraph_vList<V, E> {
 		
 	}
 	
+	//TODO: Ajust to hashmap. Do javadoc. Overload with Vertex
 	public void removeVertex(V key){
 		//so sind einfach null referenzen in adjacencyList
 		Vertex tmp = new Vertex(key);
 		vList.remove(tmp);
 	}
 	
+	//TODO: adjust params as discussed. Do Javadoc.
 	public void removeEdge(Edge e){
 		Vertex u = e.origin;
 		Vertex v = e.destination;
@@ -113,8 +120,9 @@ public class Digraph_vList<V, E> {
 	 * @param origin from which Vertex the Edge should come
 	 * @param destination to which Vertex the Edge should go
 	 */
+	//TODO: Overload with keys
 	public void addEdge(int weight, Vertex origin, Vertex destination){
-		//TODO: It seems somewhat bad to always create a new Edge or Vertex
+		//TODO: Check if Vertex exists
 		Edge e = new Edge(weight, origin, destination);
 			if (!origin.adjacencyList.contains(e)) {
 			origin.adjacencyList.add(e);
@@ -139,7 +147,7 @@ public class Digraph_vList<V, E> {
 	 * @return true if they are. False otherwise.
 	 */
 	public boolean areNeightbors(Vertex v1, Vertex v2){
-		//TODO: How fast is this really?
+		//TODO: return statement
 		if (v1.adjacencyList.contains(v2)) {
 			return true;
 		}
@@ -153,7 +161,6 @@ public class Digraph_vList<V, E> {
 	 * @return true if they are. False otherwise.
 	 */
 	public boolean areNeightbors(int index1, int index2){
-		//TODO: How fast is this really?
 		if (vList.get(index1).adjacencyList.contains(vList.get(index2))) {
 			return true;
 		}
@@ -230,7 +237,7 @@ public class Digraph_vList<V, E> {
 	public class Edge {
 		
 		private int m_weight;
-		private Vertex origin; //TODO: Make Array of some sort if Multiedge is allowed.
+		private Vertex origin;
 		private Vertex destination;
 		
 		/**
@@ -253,7 +260,7 @@ public class Digraph_vList<V, E> {
 		 * @return true if they are. false otherwise.
 		 */
 		public boolean equals(Object o){
-			//TODO: In Case multiedges are allowed. Change this. Also add check if weight is equal.
+			//TODO: Also add check if weight is equal.
 			//TODO: Fix unchecked type safety
 			return (origin.equals(((Edge) o).origin) && destination.equals(((Edge)o).destination));
 		}
@@ -288,7 +295,7 @@ public class Digraph_vList<V, E> {
 		 * @param o
 		 * @return true if key of given Vertex is equal. False otherwise.
 		 */
-		private boolean equals(Vertex o){ // Could be changed to Object with unchecked type safety
+		private boolean equals(Vertex o){ // TODO: Could be changed to Object with unchecked type safety
 			return m_key.equals(o.m_key); // V must implement equals or we are fucked
 		}
 		
