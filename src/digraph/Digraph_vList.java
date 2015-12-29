@@ -139,6 +139,7 @@ public class Digraph_vList<V, E> {
 	 * @param v is destination vertex
 	 * @return edge or null
 	 */
+	
 	public Edge getEdge(Vertex u, Vertex v){
 		for (Edge e : u.adjacencyList) {
 			if(e.origin.equals(u) && e.destination.equals(v)) return e;
@@ -176,6 +177,8 @@ public class Digraph_vList<V, E> {
 	 */
 	//TODO: Check if origin or destination are in our graph.
 	public void addEdge(int weight, Vertex origin, Vertex destination){
+
+		//TODO: Check if Vertex exists
 		Edge e = new Edge(weight, origin, destination);
 			if (!origin.adjacencyList.contains(e)) {
 			origin.adjacencyList.add(e);
@@ -208,7 +211,7 @@ public class Digraph_vList<V, E> {
 	 * @return true if they are. False otherwise.
 	 */
 	public boolean areNeighbors(Vertex v1, Vertex v2){
-		//TODO: How fast is this really?
+		//TODO: return statement
 		if (v1.adjacencyList.contains(v2)) {
 			return true;
 		}
@@ -222,7 +225,6 @@ public class Digraph_vList<V, E> {
 	 * @return true if they are. False otherwise.
 	 */
 	public boolean areNeighbors(int index1, int index2){
-		//TODO: How fast is this really?
 		if (vList.get(index1).adjacencyList.contains(vList.get(index2))) {
 			return true;
 		}
@@ -299,7 +301,7 @@ public class Digraph_vList<V, E> {
 	public class Edge {
 		
 		private int m_weight;
-		private Vertex origin; //TODO: Make Array of some sort if Multiedge is allowed.
+		private Vertex origin;
 		private Vertex destination;
 		
 		/**
@@ -322,7 +324,7 @@ public class Digraph_vList<V, E> {
 		 * @return true if they are. false otherwise.
 		 */
 		public boolean equals(Object o){
-			//TODO: In Case multiedges are allowed. Change this. Also add check if weight is equal.
+			//TODO: Also add check if weight is equal.
 			//TODO: Fix unchecked type safety
 			return (origin.equals(((Edge) o).origin) && destination.equals(((Edge)o).destination));
 		}
@@ -357,7 +359,7 @@ public class Digraph_vList<V, E> {
 		 * @param o
 		 * @return true if key of given Vertex is equal. False otherwise.
 		 */
-		private boolean equals(Vertex o){ // Could be changed to Object with unchecked type safety
+		private boolean equals(Vertex o){ // TODO: Could be changed to Object with unchecked type safety
 			return m_key.equals(o.m_key); // V must implement equals or we are fucked
 		}
 		
