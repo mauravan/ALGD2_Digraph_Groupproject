@@ -1,6 +1,5 @@
 package digraph;
 
-import digraph.Digraph_vList.Edge;
 
 public class FirstMain {
 
