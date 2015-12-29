@@ -59,8 +59,7 @@ public class Vertex<V> {
 	 * @param o
 	 * @return true if key of given Vertex is equal. False otherwise.
 	 */
-	public boolean equals(Object o) { // TODO: Could be changed to Object with
-										// unchecked type safety
+	public boolean equals(Object o) {
 		try {
 			return m_key.equals(((Vertex<V>) o).m_key) && parent.equals(((Vertex<V>) o).parent);
 		} catch (Exception e) {
