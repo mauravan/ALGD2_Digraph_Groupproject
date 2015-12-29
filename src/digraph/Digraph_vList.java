@@ -332,6 +332,7 @@ public class Digraph_vList<V, E> {
 	 */
 	private class Edge {
 		private E m_weight;
+		//TODO: Delete if not needed!
 		private Vertex origin;
 		private Vertex destination;
 
