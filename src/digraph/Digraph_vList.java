@@ -35,8 +35,8 @@ import java.util.Map.Entry;
  * @param <E> Type of Edges
  */
 public class Digraph_vList<V, E> {
-    // TODO: I'm iterating lot through this shit. Maybe use more efficient one?
-    private HashMap<V, Vertex> m_vList;
+
+	private HashMap<V, Vertex> m_vList;
 
     /**
      * m_size defines how many Verts are stored in vList. Used to define the Index of a Vertex.
