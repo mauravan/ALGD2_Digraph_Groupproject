@@ -1,6 +1,7 @@
 package digraph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import java.util.List;
 public class Digraph_vList<V, E> {
 	
 	//TODO: I'm iterating lot through this shit. Maybe use more efficient one?
-	private List<Vertex> vList;
+	private HashMap<V, Vertex> m_vList;
 	
 	/**
 	 * m_size defines how many Verts are stored in vList. Used to define the Index of a Vertex.
@@ -56,37 +57,88 @@ public class Digraph_vList<V, E> {
 	private int m_size_E;
 	
 	/**
-	 * Constructor ...
+	 * Construct a Digraph with initialCapacity = 16 and loadFactor = 0.75
+	 */
+	public Digraph_vList() {
+		m_vList = new HashMap<>();
+		m_size = 0;
+		m_size_E = 0;
+	}
+	
+	/**
+	 * Construct a Digraph with initialCapacity = size and loadFactor = 0.75
 	 * 
-	 * @param size sets the Size of the Datastructure
+	 * @param size sets the Size of initialCapacity
+	 * @throws IllegalArgumentException - if the initial capacity is negative
 	 */
 	public Digraph_vList(int size){
-		vList = new ArrayList<>(size);
+		m_vList = new HashMap<>(size);
+		m_size = 0;
+		m_size_E = 0;
+	}
+	
+	/**
+	 * Construct a Digraph with initialCapacity = size and loadFactor = loadFactor
+	 * 
+	 * @param size sets the Size of initialCapacity
+	 * @param loadFactor sets loadFactor of HashMap
+	 * @throws IllegalArgumentException - if the initial capacity is negative or the load factor is nonpositive.
+	 */
+	public Digraph_vList(int size, float loadFactor){
+		m_vList = new HashMap<>(size, loadFactor);
 		m_size = 0;
 		m_size_E = 0;
 	}
 	
 	/**
 	 * Adds a Vertex into the Graph.
-	 * @param key Type of the vertex.
+	 * Time complexity: O(1)
+	 * Duplicated keys are discarded
+	 * @param key of the vertex.
 	 */
-	public void addVertex(V key){
-		if (!containsVertex(key)) {
-			vList.add(new Vertex(key));
+	public boolean addVertex(V key){
+		if (!m_vList.containsKey(key)) {
+			m_vList.put(key, new Vertex(key));
 			m_size++;
+			return true;
 		}
+		return false;
 	}
 	
+	/**
+	 * Adds a Vertex v into the Graph.
+	 * Time complexity: O(1)
+	 * @param v to insert
+	 * @return true if added, false otherwise
+	 */
+	//TODO: Check Parent of Vertex
+	public boolean addVertex(Vertex v){
+		if (!m_vList.containsValue(v)) {
+			m_vList.put(v.m_key, v);
+			m_size++;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Get the Vertex from the Digraph.
+	 * Time complexity: O(1)
+	 * @param key
+	 * @return specific Vertex from Digraph or null
+	 */
 	public Vertex getVertex(V key){
-		//TODO: can someone fuck up the Graph? Maybe return a clone
-		for (Vertex vertex : vList) {
-			if (vertex.equals(new Vertex(key))) {
-				return vertex;
-			}
-		}
-		return null;
+		return m_vList.get(key);
 	}
 	
+	/**
+	 * Get a Edge from specific vertices
+	 * In time complexity of DoubleLinkedList Implementation
+	 * @param u is original vertex
+	 * @param v is destination vertex
+	 * @return edge or null
+	 */
 	public Edge getEdge(Vertex u, Vertex v){
 		for (Edge e : u.adjacencyList) {
 			if(e.origin.equals(u) && e.destination.equals(v)) return e;
@@ -95,12 +147,21 @@ public class Digraph_vList<V, E> {
 		
 	}
 	
-	public void removeVertex(V key){
-		//so sind einfach null referenzen in adjacencyList
-		Vertex tmp = new Vertex(key);
-		vList.remove(tmp);
+	/**
+	 * remove vertex from a Digraph
+	 * O(1)
+	 * @param key of vertex to remove
+	 */
+	public boolean removeVertex(V key){
+		if(!m_vList.containsKey(key)){
+			m_vList.remove(key);
+			m_size--;
+			return true;
+		}
+		return false;
 	}
 	
+	//TODO: CheckMembership and remove Edge
 	public void removeEdge(Edge e){
 		Vertex u = e.origin;
 		Vertex v = e.destination;
@@ -113,8 +174,8 @@ public class Digraph_vList<V, E> {
 	 * @param origin from which Vertex the Edge should come
 	 * @param destination to which Vertex the Edge should go
 	 */
+	//TODO: Check if origin or destination are in our graph.
 	public void addEdge(int weight, Vertex origin, Vertex destination){
-		//TODO: It seems somewhat bad to always create a new Edge or Vertex
 		Edge e = new Edge(weight, origin, destination);
 			if (!origin.adjacencyList.contains(e)) {
 			origin.adjacencyList.add(e);
@@ -124,12 +185,20 @@ public class Digraph_vList<V, E> {
 	
 	/**
 	 * Checks if a Vertex with the given Key already exists in the Graph.
+	 * Timecomplexity: O(1)
 	 * @param key
-	 * @return true if key is already present in the Graph. false otherwise.
 	 */
 	public boolean containsVertex(V key){
-		Vertex tmp = new Vertex(key);
-		return vList.contains(tmp);
+		return m_vList.containsKey(key);
+	}
+	
+	/**
+	 *  Checks if a given Vertex already exists in the Graph.
+	 * Timecomplexity: O(1)
+	 * @param v
+	 */
+	public boolean containsVertex(Vertex v){
+		return m_vList.containsValue(v);
 	}
 	
 	/**
@@ -138,7 +207,7 @@ public class Digraph_vList<V, E> {
 	 * @param v2
 	 * @return true if they are. False otherwise.
 	 */
-	public boolean areNeightbors(Vertex v1, Vertex v2){
+	public boolean areNeighbors(Vertex v1, Vertex v2){
 		//TODO: How fast is this really?
 		if (v1.adjacencyList.contains(v2)) {
 			return true;
@@ -152,7 +221,7 @@ public class Digraph_vList<V, E> {
 	 * @param index2
 	 * @return true if they are. False otherwise.
 	 */
-	public boolean areNeightbors(int index1, int index2){
+	public boolean areNeighbors(int index1, int index2){
 		//TODO: How fast is this really?
 		if (vList.get(index1).adjacencyList.contains(vList.get(index2))) {
 			return true;
@@ -165,7 +234,7 @@ public class Digraph_vList<V, E> {
 	 * @param v given Vert.
 	 * @return List<Vertex<V>> of adjacent Verts or NULL if v does not exist. Returned list may be empty if the given Vertex has no neightbors
 	 */
-	public List<Vertex> getNeightbors(Vertex v){
+	public List<Vertex> getNeighbors(Vertex v){
 		//TODO: Discuss in team: Pro - Gives a list that the user can destroy without tempering with the Graph
 		//						Cons - Is a frequently used Method and not very efficient i'd say.
 		//Maybe we can do this with stream framework?
@@ -181,7 +250,7 @@ public class Digraph_vList<V, E> {
 	 * @param index index of the Vertex in the Graph
 	 * @return List<Vertex<V>> of adjacent Verts or NULL if index > size of the array. Returned list may be empty if the given Vertex has no neightbors
 	 */
-	public List<Vertex> getNeightbors(int index){
+	public List<Vertex> getNeighbors(int index){
 		//TODO: Same as the method above
 		List<Vertex> l = new LinkedList<>();
 		if (index < m_size) {
