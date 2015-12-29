@@ -34,7 +34,7 @@ import java.util.Map.Entry;
  * @param <V> Type of Vertices
  * @param <E> Type of Edges
  */
-public class Digraph_vList<V, E> {
+public class Digraph<V, E> {
 
 	private HashMap<V, Vertex> m_vList;
 
@@ -52,7 +52,7 @@ public class Digraph_vList<V, E> {
     /**
      * Construct a Digraph with initialCapacity = 16 and loadFactor = 0.75
      */
-    public Digraph_vList() {
+    public Digraph() {
         m_vList = new HashMap<>();
         m_size = 0;
         m_size_E = 0;
@@ -64,7 +64,7 @@ public class Digraph_vList<V, E> {
      * @param size sets the Size of initialCapacity
      * @throws IllegalArgumentException - if the initial capacity is negative
      */
-    public Digraph_vList(int size) {
+    public Digraph(int size) {
         m_vList = new HashMap<>(size);
         m_size = 0;
         m_size_E = 0;
@@ -78,7 +78,7 @@ public class Digraph_vList<V, E> {
      * @throws IllegalArgumentException - if the initial capacity is negative or the load factor is
      *             nonpositive.
      */
-    public Digraph_vList(int size, float loadFactor) {
+    public Digraph(int size, float loadFactor) {
         m_vList = new HashMap<>(size, loadFactor);
         m_size = 0;
         m_size_E = 0;

@@ -4,7 +4,7 @@ package digraph;
 public class FirstMain {
 
 	public static void main(String[] args) {
-		Digraph_vList<Integer, String> test = new Digraph_vList<>(5);
+		Digraph<Integer, String> test = new Digraph<>(5);
 		test.addVertex(5);
 		test.addVertex(6);
 //		test.addEdge(0, test.getVertex(5), test.getVertex(6));
