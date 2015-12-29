@@ -103,8 +103,7 @@ public class Digraph_vList<V, E> {
 	 * Adds a Vertex into the Graph. Time complexity: O(1) Duplicated keys are
 	 * discarded
 	 * 
-	 * @param key
-	 *            of the vertex.
+	 * @param key of the vertex.
 	 */
 	public boolean addVertex(V key) {
 		if (!m_vList.containsKey(key)) {
@@ -115,22 +114,6 @@ public class Digraph_vList<V, E> {
 		return false;
 	}
 
-	/**
-	 * Adds a Vertex v into the Graph. Time complexity: O(1)
-	 * 
-	 * @param v
-	 *            to insert
-	 * @return true if added, false otherwise
-	 */
-	// TODO: Check Parent of Vertex
-	public boolean addVertex(Vertex v) {
-		if (!m_vList.containsValue(v)) {
-			m_vList.put(v.m_key, v);
-			m_size++;
-			return true;
-		}
-		return false;
-	}
 
 	/**
 	 * Get the Vertex from the Digraph. Time complexity: O(1)
@@ -152,23 +135,24 @@ public class Digraph_vList<V, E> {
 	 *            is destination vertex
 	 * @return edge or null
 	 */
-
-	// TODO: Do javadoc. Adjust to hashmap.
-	public Edge getEdge(Vertex u, Vertex v) {
-		for (Edge e : u.adjacencyList) {
-			if (e.origin.equals(u) && e.destination.equals(v))
+	public Edge getEdge(V u, V v) {
+		Vertex ori = m_vList.get(u);
+		Vertex dest = m_vList.get(v);
+		for (Edge e : ori.adjacencyList) {
+			if (e.destination.equals(dest)){
 				return e;
+			}
 		}
 		return null;
-
 	}
 
 	/**
-	 * remove vertex from a Digraph O(1)
+	 * remove vertex from a Digraph 
+	 * TimeCoplexity: O(?)
 	 * 
-	 * @param key
-	 *            of vertex to remove
+	 * @param key of vertex to remove
 	 */
+	//TODO: Implement correctly: check adjacency list u.s.w
 	public boolean removeVertex(V key) {
 		if (!m_vList.containsKey(key)) {
 			m_vList.remove(key);
@@ -178,14 +162,15 @@ public class Digraph_vList<V, E> {
 		return false;
 	}
 
-	public void removeEdge(Edge e) {
-		Vertex u = e.origin;
-		Vertex v = e.destination;
-		u.adjacencyList.remove(v);
+	
+	public boolean removeEdge(int weight, V origin, V destination) {
+		Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
+		return m_vList.get(origin).adjacencyList.remove(e);
 	}
 
 	/**
-	 * Adds a Edge into the Graph
+	 * Adds a Edge into the Graph.
+	 * Timecomplexity: O(n)
 	 * 
 	 * @param weight
 	 *            give an appropriate weight or 0 for default.
@@ -193,15 +178,19 @@ public class Digraph_vList<V, E> {
 	 *            from which Vertex the Edge should come
 	 * @param destination
 	 *            to which Vertex the Edge should go
+	 * @return true if added, false if vertices are not in the Graph or edge is already in the list
 	 */
-	public void addEdge(int weight, Vertex origin, Vertex destination) {
+	public boolean addEdge(int weight, V origin, V destination) {
 
-		// TODO: Check if Vertex exists
-		Edge e = new Edge(weight, origin, destination);
-		if (!origin.adjacencyList.contains(e)) {
-			origin.adjacencyList.add(e);
-			m_size_E++;
+		if (m_vList.containsKey(origin) && m_vList.containsKey(destination)) {
+			Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
+			if (!m_vList.get(origin).adjacencyList.contains(e)) {
+				m_vList.get(origin).adjacencyList.add(e);
+				m_size_E++;
+				return true;
+			}
 		}
+		return false;
 	}
 
 	/**
@@ -214,40 +203,17 @@ public class Digraph_vList<V, E> {
 		return m_vList.containsKey(key);
 	}
 
-	/**
-	 * Checks if a given Vertex already exists in the Graph. Time complexity:
-	 * O(1)
-	 * 
-	 * @param v
-	 */
-	public boolean containsVertex(Vertex v) {
-		return m_vList.containsValue(v);
-	}
 
 	/**
 	 * Checks if two Vertex are connected by an Edge
+	 * Timecomplexity: O(n)
 	 * 
-	 * @param v1
-	 * @param v2
+	 * @param V v1
+	 * @param V v2
 	 * @return true if they are. False otherwise.
 	 */
-	public boolean areNeighbors(Vertex v1, Vertex v2) {
-		// TODO: return statement
-		if (v1.adjacencyList.contains(v2)) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Checks if two Vertex are connected by an Edge
-	 * 
-	 * @param index1
-	 * @param index2
-	 * @return true if they are. False otherwise.
-	 */
-	public boolean areNeighbors(int index1, int index2) {
-		if (vList.get(index1).adjacencyList.contains(vList.get(index2))) {
+	public boolean areNeighbors(V v1, V v2) {
+		if (m_vList.get(v1).adjacencyList.contains(m_vList.get(v2))) {
 			return true;
 		}
 		return false;
@@ -325,22 +291,23 @@ public class Digraph_vList<V, E> {
 	/**
 	 * 
 	 * @author Matthias
-	 *
-	 * @param <E>
-	 *            Wrapper Type of weight
-	 *
+	 * 
 	 */
 	private class Edge {
-		private E m_weight;
+		private int m_weight;
 		//TODO: Delete if not needed!
 		private Vertex origin;
 		private Vertex destination;
 
-		public E getWeight() {
+		public int getWeight() {
 			return m_weight;
 		}
 
-		public void setWeight(E weight) {
+		/**
+		 * Only works for positive weights.
+		 * @param weight
+		 */
+		public void setWeight(int weight) {
 			m_weight = weight;
 		}
 
@@ -349,14 +316,14 @@ public class Digraph_vList<V, E> {
 		 * graph
 		 * 
 		 * @param weight
-		 *            defines the "cost" of an Edge. Use 0 for unweighed Edges.
+		 *            defines the "cost" of an Edge. Use 0 for unweighed Edges. Only works for positive weights
 		 * @param origin
 		 *            * Vertex from which the Edge comes. Can be same as
 		 *            destination.
 		 * @param destination
 		 *            Vertex to which the Edge goes. Can be same as origin.
 		 */
-		public Edge(E weight, Vertex origin, Vertex destination) {
+		public Edge(int weight, Vertex origin, Vertex destination) {
 			this.origin = origin;
 			this.destination = destination;
 			m_weight = weight;
@@ -371,7 +338,7 @@ public class Digraph_vList<V, E> {
 		public boolean equals(Object o) {
 			try {
 				return (origin.equals(((Edge) o).origin) && destination.equals(((Edge) o).destination)
-						&& m_weight.equals(((Edge) o).m_weight));
+						&& m_weight == ((Edge) o).m_weight);
 			} catch (Exception e) {
 				return false;
 			}
@@ -394,10 +361,17 @@ public class Digraph_vList<V, E> {
 		 * Index of vList in with the adjacency list is stored
 		 */
 		private List<Edge> adjacencyList;
+		
+		/**
+		 * Number of edges landing on this Vertex.
+		 * For outdeg use adjacencylist.lenght()
+		 */
+		private int indeg;
 
 		private Vertex(V key) {
 			m_key = key;
 			adjacencyList = new DLinkedList<>();
+			indeg = 0;
 		}
 
 		/**
