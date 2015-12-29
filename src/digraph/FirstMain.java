@@ -1,5 +1,7 @@
 package digraph;
 
+import digraph.Digraph_vList.Edge;
+
 public class FirstMain {
 
 	public static void main(String[] args) {
@@ -14,6 +16,8 @@ public class FirstMain {
 		test.addEdge(0, test.getVertex(5), test.getVertex(53));
 		test.addEdge(0, test.getVertex(200), test.getVertex(344));
 		test.addEdge(0, test.getVertex(344), test.getVertex(200));
+		test.addEdge(0, test.getVertex(200), test.getVertex(344));
+		
 		test.addVertex(60);
 		test.addVertex(70);
 		test.addVertex(80);

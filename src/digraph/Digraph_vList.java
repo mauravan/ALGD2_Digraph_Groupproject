@@ -71,6 +71,7 @@ public class Digraph_vList<V, E> {
 	 * @param size sets the Size of initialCapacity
 	 * @throws IllegalArgumentException - if the initial capacity is negative
 	 */
+	//TODO: without param.
 	public Digraph_vList(int size){
 		m_vList = new HashMap<>(size);
 		m_size = 0;
@@ -140,6 +141,8 @@ public class Digraph_vList<V, E> {
 	 * @return edge or null
 	 */
 	
+	
+	//TODO: Do javadoc. Adjust to hashmap.
 	public Edge getEdge(Vertex u, Vertex v){
 		for (Edge e : u.adjacencyList) {
 			if(e.origin.equals(u) && e.destination.equals(v)) return e;
@@ -162,7 +165,6 @@ public class Digraph_vList<V, E> {
 		return false;
 	}
 	
-	//TODO: CheckMembership and remove Edge
 	public void removeEdge(Edge e){
 		Vertex u = e.origin;
 		Vertex v = e.destination;
@@ -175,7 +177,6 @@ public class Digraph_vList<V, E> {
 	 * @param origin from which Vertex the Edge should come
 	 * @param destination to which Vertex the Edge should go
 	 */
-	//TODO: Check if origin or destination are in our graph.
 	public void addEdge(int weight, Vertex origin, Vertex destination){
 
 		//TODO: Check if Vertex exists
