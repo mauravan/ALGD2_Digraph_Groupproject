@@ -198,7 +198,7 @@ public class Digraph_vList<V, E> {
 	
 	/**
 	 *  Checks if a given Vertex already exists in the Graph.
-	 * Timecomplexity: O(1)
+	 * Time complexity: O(1)
 	 * @param v
 	 */
 	public boolean containsVertex(Vertex v){
