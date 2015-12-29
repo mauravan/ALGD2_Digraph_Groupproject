@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Approach 1:
@@ -269,7 +270,7 @@ public class Digraph_vList<V, E> {
 	 * Clears the Graph
 	 */
 	public void clear(){
-		vList.clear();
+		m_vList.clear();
 		m_size = 0;
 	}
 	
@@ -278,99 +279,17 @@ public class Digraph_vList<V, E> {
 	 */
 	public String toString(){
 		//TODO: Implement this shit
-		for (Vertex vertex : vList) {
-			vertex.toString();
-		}
+//		for (Vertex vertex : m_vList) {
+//			vertex.toString();
+//		}
 		return null;
 	}
 	
 	public void printGraph(){
 		int i = 0;
-		for (Vertex vertex : vList) {
-			System.out.println("["+i++ +"] --->" + vertex.toString());
-		}
-	}
-
-	
-	/**
-	 * Having an explicit Edge Class allows for Storage of extra Information about them.
-	 * 
-	 * @author Roman
-	 *
-	 * @param <E> Type of Edge
-	 */
-	public class Edge {
-		
-		private int m_weight;
-		private Vertex origin;
-		private Vertex destination;
-		
-		/**
-		 * Constructor for Edges.
-		 * 
-		 * @param weight defines the "cost" of an Edge. Use 0 for unweighed Edges.
-		 * @param origin Vertex from which the Edge comes. Can be same as destination.
-		 * @param destination Vertex to which the Edge goes. Can be same as origin.
-		 */
-		private Edge(int weight, Vertex origin, Vertex destination){
-			//TODO: The Exercise states, that the Type of the Edge should be chooseable? Why would it need a type?
-			m_weight = weight;
-			this.origin = origin;
-			this.destination = destination;
+		for(Entry<V, Vertex> entry : m_vList.entrySet()) {
+		    System.out.println("["+i++ +"] --->" + entry.getValue().toString());
 		}
 		
-		/**
-		 * Checks if origin and destination are equal
-		 * @param o
-		 * @return true if they are. false otherwise.
-		 */
-		public boolean equals(Object o){
-			//TODO: Also add check if weight is equal.
-			//TODO: Fix unchecked type safety
-			return (origin.equals(((Edge) o).origin) && destination.equals(((Edge)o).destination));
-		}
-		
-	}
-	
-	/**
-	 * 
-	 * @author Roman
-	 *
-	 */
-	public class Vertex{
-		
-		/**
-		 * Unique Identifier
-		 */
-		private V m_key;
-		/**
-		 * Index of vList in with the adjacency list is stored
-		 */
-		private List<Edge> adjacencyList;
-		
-		private Vertex(V key){
-			m_key = key;
-			adjacencyList = new LinkedList<>();
-		}
-		
-		
-
-		/**
-		 * Only checks if keys are equal.
-		 * @param o
-		 * @return true if key of given Vertex is equal. False otherwise.
-		 */
-		private boolean equals(Vertex o){ // TODO: Could be changed to Object with unchecked type safety
-			return m_key.equals(o.m_key); // V must implement equals or we are fucked
-		}
-		
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-			sb.append("["+m_key.toString()+"]");
-			for (Edge edge : adjacencyList) {
-				sb.append(" --> " + "[" + edge.destination.m_key.toString() +"]");
-			}
-			return sb.toString();
-		}
 	}
 }
