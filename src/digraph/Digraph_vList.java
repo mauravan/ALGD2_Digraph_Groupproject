@@ -64,7 +64,6 @@ public class Digraph_vList<V, E> {
      * @param size sets the Size of initialCapacity
      * @throws IllegalArgumentException - if the initial capacity is negative
      */
-    // TODO: without param.
     public Digraph_vList(int size) {
         m_vList = new HashMap<>(size);
         m_size = 0;
