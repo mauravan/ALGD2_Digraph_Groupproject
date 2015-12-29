@@ -1,7 +1,6 @@
 package digraph;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -36,7 +35,6 @@ import java.util.Map.Entry;
  * @param <E> Type of Edges
  */
 public class Digraph_vList<V, E> {
-
     // TODO: I'm iterating lot through this shit. Maybe use more efficient one?
     private HashMap<V, Vertex> m_vList;
 
@@ -107,7 +105,7 @@ public class Digraph_vList<V, E> {
      * @param key
      * @return specific Vertex from Digraph or null
      */
-    public Vertex getVertex(V key) {
+    private Vertex getVertex(V key) {
         return m_vList.get(key);
     }
 
@@ -118,7 +116,7 @@ public class Digraph_vList<V, E> {
      * @param v is destination vertex
      * @return edge or null
      */
-    public Edge getEdge(V u, V v) {
+    private Edge getEdge(V u, V v) {
         Vertex ori = m_vList.get(u);
         Vertex dest = m_vList.get(v);
         for (Edge e : ori.adjacencyList) {
@@ -145,12 +143,13 @@ public class Digraph_vList<V, E> {
     }
 
     public boolean removeEdge(int weight, V origin, V destination) {
+        // TODO: adjust outdeg
         Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
         return m_vList.get(origin).adjacencyList.remove(e);
     }
 
     /**
-     * Adds a Edge into the Graph. Timecomplexity: O(n)
+     * Adds a Edge into the Graph. Timecomplexity: O(outdeg(origin))
      * 
      * @param weight give an appropriate weight or 0 for default.
      * @param origin from which Vertex the Edge should come
@@ -158,7 +157,7 @@ public class Digraph_vList<V, E> {
      * @return true if added, false if vertices are not in the Graph or edge is already in the list
      */
     public boolean addEdge(int weight, V origin, V destination) {
-
+        // TODO: add outdeg to origin
         if (m_vList.containsKey(origin) && m_vList.containsKey(destination)) {
             Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
             if (!m_vList.get(origin).adjacencyList.contains(e)) {
@@ -180,69 +179,28 @@ public class Digraph_vList<V, E> {
     }
 
     /**
-     * Checks if two Vertex are connected by an Edge Timecomplexity: O(n)
+     * Checks if two Vertex are connected by an Edge (directed) Timecomplexity: O(outdeg(origin))
      * 
      * @param V v1
      * @param V v2
-     * @return true if they are. False otherwise.
+     * @return true if origin has an edge to destination. False otherwise.
      */
-    public boolean areNeighbors(V v1, V v2) {
-        if (m_vList.get(v1).adjacencyList.contains(m_vList.get(v2))) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Returns a List of Vertex that are adjacent to a given Vertex v.
-     * 
-     * @param v given Vert.
-     * @return List<Vertex<V>> of adjacent Verts or NULL if v does not exist. Returned list may be
-     *         empty if the given Vertex has no neightbors
-     */
-    public List<Vertex> getNeighbors(Vertex v) {
-        // TODO: Discuss in team: Pro - Gives a list that the user can destroy
-        // without tempering with the Graph
-        // Cons - Is a frequently used Method and not very efficient i'd say.
-        // Maybe we can do this with stream framework?
-        List<Vertex> l = new LinkedList<>();
-        for (Edge e : v.adjacencyList) {
-            l.add(e.destination);
-        }
-        return l;
+    public boolean areNeighbors(V origin, V destination) {
+        return m_vList.get(origin).adjacencyList.contains(m_vList.get(destination));
     }
 
     /**
      * Returns a List of Vertex that are adjacent to a Vertex that is stored at the given Index.
      * 
-     * @param index index of the Vertex in the Graph
-     * @return List<Vertex<V>> of adjacent Verts or NULL if index > size of the array. Returned list
-     *         may be empty if the given Vertex has no neightbors
-     */
-    public List<Vertex> getNeighbors(int index) {
-        // TODO: Same as the method above
-        List<Vertex> l = new LinkedList<>();
-        if (index < m_size) {
-            for (Edge e : vList.get(index).adjacencyList) {
-                l.add(e.destination);
-            }
-            return l;
-        }
-        return null;
-    }
-
-    /**
+     * O(outdeg(key))
      * 
-     * @param origin Key of start Vertex
-     * @param destination Key of destination Vertex
-     * @return List of Keys representing each Vertex which is part of that Path. Returns null if no
-     *         path was found.
+     * @param index index of the Vertex in the Graph
+     * @return List<V> of adjacent Verts or NULL if index > size of the array. Returned list may be
+     *         empty if the given Vertex has no neighbors
      */
-    public List<V> getPath(V origin, V destination) {
-        if (this.m_vList.containsKey(origin) && this.m_vList.containsKey(destination)) {
+    public List<V> getNeighbors(V key) {
 
-        }
-
+        Vertex v = m_vList.get(key);
         return null;
     }
 
