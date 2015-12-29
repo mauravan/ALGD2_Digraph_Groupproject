@@ -49,7 +49,7 @@ public class Vertex<V> {
 
 	private Vertex(V key, Digraph_vList parent) {
 		m_key = key;
-		adjacencyList = new LinkedList<>();
+		adjacencyList = new DLinkedList<>();
 		this.parent = parent;
 	}
 
