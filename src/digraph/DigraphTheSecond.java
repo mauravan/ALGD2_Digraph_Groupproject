@@ -25,6 +25,8 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
 	 * internal Datastructure used to Store Vertices
 	 */
 	private HashMap<V, Vertex> m_vList;
+	
+	private HashMap<E, Edge> m_eList;
 
     /**
      * m_size defines how many Verts are stored in vList. Used to define the Index of a Vertex.
@@ -42,6 +44,7 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
      */
     public DigraphTheSecond() {
         m_vList = new HashMap<>();
+        m_eList = new HashMap<>();
         m_size = 0;
         m_size_E = 0;
     }
@@ -71,19 +74,6 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
         m_size = 0;
         m_size_E = 0;
     }
-	
-	
-	@Override
-	public E addEdge(double weigth, V origin, V destination) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean addEdge(E edge, V origin, V destination) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	
 
 	public Object clone() {
@@ -204,11 +194,6 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
 		
 	}
 
-	@Override
-	public boolean assertVertexExist(V vertex) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public boolean removeAllEdges(Collection<? extends E> edges) {
@@ -279,11 +264,13 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
      * @param <E> Type of the Edge
      * 
      */
-    private class Edge<E> {
+    private class Edge {
         private double m_weight;
         // TODO: Delete if not needed!
-        private Vertex origin;
-        private Vertex destination;
+        private V origin;
+        private V destination;
+        
+        private E m_key_E;
 
         public double getWeight() {
             return m_weight;
@@ -307,7 +294,8 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
          * @param destination Vertex to which the Edge goes. Can be same as origin.
          */
         //TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using only Vertex Origin or Vertex Destination
-        public Edge(int weight, Vertex origin, Vertex destination) {
+        public Edge(E key, double weight, V origin, V destination) {
+        	m_key_E = key;
             this.origin = origin;
             this.destination = destination;
             m_weight = weight;
@@ -336,15 +324,19 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
      *  
      * @param <V> Type of the Vertex
      */
-    private class Vertex<V> {
+    private class Vertex {
         /**
          * Unique Identifier
          */
-        private V m_key;
+        private V m_key_V;
         /**
          * Index of vList in with the adjacency list is stored
          */
-        private List<Edge> adjacencyList;
+        private List<E> outgoingList;
+        /**
+         * Used to efficiently delete Vertices from the Graph.
+         */
+        private List<E> incomingList;
 
         /**
          * Number of edges landing on this Vertex. For outdeg use adjacencylist.lenght()
@@ -352,8 +344,9 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
         private int indeg;
 
         private Vertex(V key) {
-            m_key = key;
-            adjacencyList = new DLinkedList<>();
+            m_key_V = key;
+            outgoingList = new DLinkedList<>();
+            incomingList = new DLinkedList<>();
             indeg = 0;
         }
 
@@ -365,18 +358,37 @@ public class DigraphTheSecond<V, E> implements IDigraph<V, E> {
          */
         @SuppressWarnings("unchecked")
         public boolean equals(Object o) {
-            return m_key.equals(((Vertex) o).m_key);
+            return m_key_V.equals(((Vertex) o).m_key_V);
         }
 
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append("[" + m_key.toString() + "]");
-            for (Edge edge : adjacencyList) {
-                sb.append(" --> " + "[" + edge.destination.m_key.toString() + "]");
-            }
-            return sb.toString();
-        }
+//        TODO: FIX
+//        public String toString() {
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("[" + m_key_V.toString() + "]");
+//            for (E edge : outgoingList) {
+//                sb.append(" --> " + "[" + edge.destination.toString() + "]");
+//            }
+//            return sb.toString();
+//        }
     }
+
+	@Override
+	public boolean addEdge(E key, double weigth, V origin, V destination) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public double getShortestPath(V origin, V desination) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public HashMap<V, Double> dijkstra(V origin) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 

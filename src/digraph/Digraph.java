@@ -1,5 +1,6 @@
 package digraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -36,6 +37,9 @@ import java.util.Map.Entry;
  */
 public class Digraph<V, E> {
 
+	/**
+	 * internal Datastructure used to Store Vertices
+	 */
 	private HashMap<V, Vertex> m_vList;
 
     /**
@@ -156,12 +160,12 @@ public class Digraph<V, E> {
      * @return true if added, false if vertices are not in the Graph or edge is already in the list
      */
     public boolean addEdge(int weight, V origin, V destination) {
-        // TODO: add outdeg to origin
         if (m_vList.containsKey(origin) && m_vList.containsKey(destination)) {
             Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
             if (!m_vList.get(origin).adjacencyList.contains(e)) {
                 m_vList.get(origin).adjacencyList.add(e);
                 m_size_E++;
+                m_vList.get(destination).indeg++;
                 return true;
             }
         }
@@ -189,7 +193,7 @@ public class Digraph<V, E> {
     }
 
     /**
-     * Returns a List of Vertex that are adjacent to a Vertex that is stored at the given Index.
+     * Returns a List of Vertex that are adjacent to a Vertex that is stored at the given key.
      * 
      * O(outdeg(key))
      * 
@@ -200,7 +204,11 @@ public class Digraph<V, E> {
     public List<V> getNeighbors(V key) {
 
         Vertex v = m_vList.get(key);
-        return null;
+        ArrayList<V> verts = new ArrayList<>(v.adjacencyList.size());
+        for (Edge edge : v.adjacencyList) {
+			verts.add(edge.destination.m_key);
+		}
+        return verts;
     }
 
     /**

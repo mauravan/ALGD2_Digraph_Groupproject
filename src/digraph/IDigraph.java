@@ -2,6 +2,7 @@ package digraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 public interface IDigraph<V, E> {
@@ -12,18 +13,11 @@ public interface IDigraph<V, E> {
 	 * @param weigth ONLY POSITIVE ALLOWED
 	 * @param origin
 	 * @param destination
+	 * @param E key
 	 * @return
 	 */
-	E addEdge(double weigth, V origin, V destination);
+	boolean addEdge(E key, double weigth, V origin, V destination);
 	
-	/**
-	 * Adds an Edge into the Graph.
-	 * @param edge
-	 * @param origin
-	 * @param destination
-	 * @return true if Edge was added.
-	 */
-	boolean addEdge(E edge, V origin, V destination);
 	
 	/**
 	 * Adds a Vertex into the Graph
@@ -95,6 +89,7 @@ public interface IDigraph<V, E> {
 	Set<E> getAllEdgesOfVertex(V vertex);
 	
 	/**
+	 * 
 	 * @param vertex
 	 * @return returns a set of all edges leaving this Vertex
 	 */
@@ -144,7 +139,7 @@ public interface IDigraph<V, E> {
 	boolean removeEdge(E edge);
 	
 	/**
-	 * 
+	 * Iterate through source adj list and search weight and dest.
 	 * @param weight ONLY POSITIVE ALLOWED
 	 * @param origin
 	 * @param destination
@@ -154,6 +149,7 @@ public interface IDigraph<V, E> {
 	
 	/**
 	 * Removes the Vertex and ALL touching Edges
+	 * Remove all Edges from Adj List and search all adjlist from all verts. ALSO: remove vertex from Hasmap
 	 * @param v
 	 * @return true if the Vertex was removed.
 	 */
@@ -167,15 +163,11 @@ public interface IDigraph<V, E> {
 	void setEdgeWeight(E edge, double weight);
 	
 	/**
-	 * 
-	 * @param vertex
-	 * @return True if vertex is in the Graph
-	 * @throws AssertionError
+	 * Two Graphs are equal if their Vertex-Hashmap and Edge-Hashmap are equal
+	 * @param obj
+	 * @return
 	 */
-	boolean assertVertexExist(V vertex);
-	
-	//TODO: Do we need this?
-	//boolean equals(Object obj);
+	boolean equals(Object obj);
 	
 	/**
 	 * Removes all edges that are in the given Colletion
@@ -237,15 +229,16 @@ public interface IDigraph<V, E> {
 	/**
 	 * 
 	 * @param vertex
-	 * @param destination
 	 * @return a set of Vertices representing the shortest Path from origin to destination
 	 */
-	Set<V> dijkstra(V origin, V destination); //TODO: Discuss in team
+	double getShortestPath(V origin, V desination);
 	
-//	/**
-//	 * 
-//	 * @param origin
-//	 * @return an ArrayList of Sets of Vertices representing the shortest Path from origin to all other Vertices
-//	 */
-//	ArrayList<Set<V>> dijkstra(V origin); //TODO: Discuss in team
+	/**
+	 * 
+	 * @param vertex
+	 * @return a set of Vertices representing the shortest Path from origin to destination
+	 */
+	HashMap<V, Double> dijkstra(V origin);
+	
+	
 }
