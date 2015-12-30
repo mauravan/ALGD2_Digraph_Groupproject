@@ -110,6 +110,7 @@ public class DigraphOld<V, E> {
      */
     private Vertex getVertex(V key) {
         return m_vList.get(key);
+        return another;
     }
 
     /**
