@@ -148,16 +148,19 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public Set<E> getLeavingEdgesOfVertex(V vertex) {
+		assert (containsVertex(vertex)) : "Vertex must be in list";
 		return new HashSet<E>(m_vList.get(vertex).outgoingList);
 	}
 
 	@Override
 	public Set<E> getIncomingEdgesOfVertex(V vertex) {
+		assert (containsVertex(vertex)) : "Vertex must be in list";
 		return new HashSet<E>(m_vList.get(vertex).incomingList);
 	}
 
 	@Override
 	public Set<E> getEdgesBetween(V source, V destination) {
+		assert (containsVertex(source) && containsVertex(destination)) : "Vertices must be in list";
 		return (m_vList.get(source).outgoingList.stream()
 				.filter(e -> (m_eList.get(e).destination.equals(destination)))
 				.collect(Collectors.toSet()));
@@ -165,16 +168,19 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public V getEdgeSource(E edge) {
+		assert (containsEdge(edge)) : "Edge must be in list";
 		return m_eList.get(edge).origin;
 	}
 
 	@Override
 	public V getEdgeDestination(E edge) {
+		assert (containsEdge(edge)) : "Edge must be in list";
 		return m_eList.get(edge).destination;
 	}
 
 	@Override
 	public double getEdgeWeight(E edge) {
+		assert (containsEdge(edge)) : "Edge must be in list";
 		return m_eList.get(edge).m_weight;
 	}
 
@@ -182,6 +188,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 	// m_eList
 	@Override
 	public boolean removeEdge(E edge) {
+		assert (containsEdge(edge)) : "Edge must be in list";
 		Edge e = m_eList.get(edge);
 		return (m_vList.get(e.origin).outgoingList.remove(edge) 
 				&& m_vList.get(e.destination).incomingList.remove(edge)
@@ -191,6 +198,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public E removeEdge(double weight, V origin, V destination) {
+		assert (weight>=0) : "not a valid weight";
 		try{
 		// find the edge in the HashMap
 		Optional<Edge> edge = m_eList.values().stream()
