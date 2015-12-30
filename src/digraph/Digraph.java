@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 
@@ -31,25 +32,9 @@ public class Digraph<V, E> implements IDigraph<V, E>{
 	 */
 	private HashMap<E, Edge> m_eList;
 
-    /**
-     * m_size defines how many Verts are stored in vList. Used to define the Index of a Vertex.
-     * 
-     */
-    private int m_size;
-    /**
-     * defines how many Edges there are in the Graph. If no multiedges or selfloopes allowed
-     * maxnumber of Edged is n(n-1) if so it is a Full Graph.
-     */
-    private int m_size_E;
-
-    /**
-     * Construct a Digraph with initialCapacity = 16 and loadFactor = 0.75
-     */
     public Digraph() {
         m_vList = new HashMap<>();
         m_eList = new HashMap<>();
-        m_size = 0;
-        m_size_E = 0;
     }
 
     /**
@@ -61,8 +46,6 @@ public class Digraph<V, E> implements IDigraph<V, E>{
     public Digraph(int sizeVector, int sizeEdge) {
         m_vList = new HashMap<>(sizeVector);
         m_eList = new HashMap<>(sizeEdge);
-        m_size = 0;
-        m_size_E = 0;
     }
 
     /**
@@ -76,81 +59,89 @@ public class Digraph<V, E> implements IDigraph<V, E>{
     public Digraph(int sizeVector, int sizeEdge, float loadFactorVector, float loadFactorEdge) {
         m_vList = new HashMap<>(sizeVector, loadFactorVector);
         m_eList = new HashMap<>(sizeEdge, loadFactorEdge);
-        m_size = 0;
-        m_size_E = 0;
     }
 	
-
+    
+	@SuppressWarnings("unchecked")
 	public Object clone() {
-		return null;
+		Digraph<V, E> clone = new Digraph<>();
+		clone.m_eList = (HashMap<E, Digraph<V, E>.Edge>) m_eList.clone();
+		clone.m_vList = (HashMap<V, Digraph<V, E>.Vertex>) m_vList.clone();
+		return clone;
 	}
 
-	
-
-//	@Override
-//	public ArrayList<Set<V>> dijkstra(V origin) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-	
 	@Override
-	public boolean addEdge(E key, double weigth, V origin, V destination) {
-		// TODO Auto-generated method stub
+	public boolean addEdge(E key, double weight, V origin, V destination) {
+		assert (weight>=0) : "weight must be <= 0";
+		if (containsVertex(origin) && containsVertex(destination)) {
+			Edge edge = new Edge(key, weight, origin, destination);
+			m_eList.put(key, edge);
+			m_vList.get(origin).outgoingList.add(key);
+			m_vList.get(destination).incomingList.add(key);
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean addVertex(V vertex) {
-		// TODO Auto-generated method stub
+		if(!containsVertex(vertex)){
+			Vertex tmp = new Vertex(vertex);
+			m_vList.put(vertex, tmp);
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public boolean containsEdge(E edge) {
-		// TODO Auto-generated method stub
-		return false;
+		return m_eList.containsKey(edge);
 	}
 
 	@Override
 	public boolean containsEdge(V origin, V destination) {
-		// TODO Auto-generated method stub
+		if(!(containsVertex(origin) && containsVertex(destination))) return false;
+		for (E e : m_vList.get(origin).outgoingList) {
+			if (m_eList.get(e).destination.equals(destination)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean containsVertex(V vertex) {
-		// TODO Auto-generated method stub
-		return false;
+		return m_vList.containsKey(vertex);
 	}
 
 	@Override
 	public int indegOf(V vertex) {
-		// TODO Auto-generated method stub
-		return 0;
+		assert (containsVertex(vertex)) : "Vertex must be in list";
+		return m_vList.get(vertex).incomingList.size();
 	}
 
 	@Override
 	public int outdegOf(V vertex) {
-		// TODO Auto-generated method stub
-		return 0;
+		assert (containsVertex(vertex)) : "Vertex must be in list";
+		return m_vList.get(vertex).outgoingList.size();
 	}
 
 	@Override
 	public Set<V> getVertsOfGraph() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_vList.keySet();
 	}
 
 	@Override
 	public Set<E> getEdgesOfGraph() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_eList.keySet();
 	}
 
 	@Override
 	public Set<E> getAllEdgesOfVertex(V vertex) {
-		// TODO Auto-generated method stub
-		return null;
+		DLinkedList<E> inc = (DLinkedList<E>) m_vList.get(vertex).incomingList;
+		DLinkedList<E> out = (DLinkedList<E>) m_vList.get(vertex).outgoingList;
+		inc.conc(out, true);
+		return new HashSet<>(inc);
 	}
 
 	@Override
@@ -368,16 +359,11 @@ public class Digraph<V, E> implements IDigraph<V, E>{
 	         */
 	        private List<E> incomingList;
 	
-	        /**
-	         * Number of edges landing on this Vertex. For outdeg use adjacencylist.lenght()
-	         */
-	        private int indeg;
 	
 	        private Vertex(V key) {
 	            m_key_V = key;
 	            outgoingList = new DLinkedList<>();
 	            incomingList = new DLinkedList<>();
-	            indeg = 0;
 	        }
 	
 	        /**

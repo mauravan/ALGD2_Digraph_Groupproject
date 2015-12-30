@@ -16,7 +16,7 @@ public interface IDigraph<V, E> {
 	 * @param E key
 	 * @return
 	 */
-	boolean addEdge(E key, double weigth, V origin, V destination);
+	boolean addEdge(E key, double weight, V origin, V destination);
 	
 	
 	/**
