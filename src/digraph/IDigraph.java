@@ -156,7 +156,7 @@ public interface IDigraph<V, E> {
 	boolean removeVertex(V v);
 	
 	/**
-	 * 
+	 * If the Edge is found and the weight is >= 0, the weight of the given edge is adjusted to weight.
 	 * @param edge
 	 * @param weight ONLY POSITIVE ALLOWED
 	 */

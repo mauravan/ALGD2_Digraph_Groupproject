@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -209,62 +210,76 @@ public class Digraph<V, E> implements IDigraph<V, E>{
 
 	@Override
 	public void setEdgeWeight(E edge, double weight) {
-		// TODO Auto-generated method stub
-		
+		assert(weight>=0):"weight must be >=0";
+		if (weight >=0) m_eList.get(edge).m_weight = weight;
 	}
 
 	@Override
 	public boolean removeAllEdges(Collection<? extends E> edges) {
-		// TODO Auto-generated method stub
-		return false;
+		int edgeSize = getNumberOfEdges();
+		for (E e : edges) {
+			removeEdge(e);
+		}
+		return (edgeSize-edges.size()==getNumberOfEdges());
 	}
 
 	@Override
 	public boolean removeAllEdges(E[] edges) {
-		// TODO Auto-generated method stub
-		return false;
+		int edgeSize = getNumberOfEdges();
+		for (E e : edges) {
+			removeEdge(e);
+		}
+		return (edgeSize-edges.length==getNumberOfEdges());
 	}
 
 	@Override
 	public boolean removeAllEdges() {
-		// TODO Auto-generated method stub
-		return false;
+		for(Vertex v : m_vList.values()){
+			v.outgoingList.clear();
+			v.incomingList.clear();
+		}
+		m_eList.clear();
+		return m_eList.isEmpty();
 	}
 
 	@Override
 	public boolean clear() {
-		// TODO Auto-generated method stub
-		return false;
+		m_eList.clear();
+		m_vList.clear();
+		return m_eList.isEmpty() && m_vList.isEmpty();
 	}
 
 	@Override
 	public Set<E> removeAllEdgesBetweenVertex(V origin, V destination) {
-		// TODO Auto-generated method stub
-		return null;
+		HashSet<E> edgeList = new HashSet<>();
+		for (E e : m_vList.get(origin).outgoingList) {
+			if (m_eList.get(e).destination.equals(destination)) {
+				edgeList.add(e);
+				m_vList.get(origin).outgoingList.remove(e);
+				m_eList.remove(e);
+			}
+		}
+		return edgeList;
 	}
 
-	//	@Override
-	//	public ArrayList<Set<V>> dijkstra(V origin) {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
 		
 		@Override
 	public boolean removeAllVertices(Collection<? extends V> vertices) {
-		// TODO Auto-generated method stub
-		return false;
+		int listSize = m_vList.size();
+		for (V v : vertices) {
+			removeVertex(v);
+		}
+		return (listSize-vertices.size() == m_vList.size());
 	}
 
 	@Override
 	public int getNumberOfVerts() {
-		// TODO Auto-generated method stub
-		return 0;
+		return m_vList.size();
 	}
 
 	@Override
 	public int getNumberOfEdges() {
-		// TODO Auto-generated method stub
-		return 0;
+		return m_eList.size();
 	}
 
 	@Override
@@ -301,19 +316,6 @@ public class Digraph<V, E> implements IDigraph<V, E>{
 	        private V destination;
 	        
 	        private E m_key_E;
-	
-	        public double getWeight() {
-	            return m_weight;
-	        }
-	
-	        /**
-	         * Only works for positive weights.
-	         * 
-	         * @param weight
-	         */
-	        public void setWeight(double weight) {
-	            m_weight = weight;
-	        }
 	
 	        /**
 	         * Constructor for Edges. Destination and Origin have to be in the same graph
