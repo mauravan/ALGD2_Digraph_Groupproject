@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
  * multiedges using a HashSet to store all the Vertices. To allow weighted Edges
  * and nested Adjacency Lists we used the inner classes Vertex<V> and Edge<E>.
  * 
+ * The Verticies and Edges are reffered by key. Those Key-Values are unique.
+ * If one adds a key that is already present in the Graph, the old value will be discarded.
+ * 
  * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
  *
  * @param <V>
@@ -125,14 +128,12 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public int indegOf(V vertex) {
-
 		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).incomingList.size();
 	}
 
 	@Override
 	public int outdegOf(V vertex) {
-
 		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).outgoingList.size();
 	}
@@ -323,6 +324,21 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		
+		for (Vertex v : m_vList.values()) {
+			sb.append(v.toString());
+			for (E e : v.outgoingList) {
+				sb.append(m_eList.get(e).toString());
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// INNER CLASSES
@@ -369,15 +385,10 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 			return m_key_V.equals(((Vertex) o).m_key_V);
 		}
 
-		// TODO: FIX
-		// public String toString() {
-		// StringBuilder sb = new StringBuilder();
-		// sb.append("[" + m_key_V.toString() + "]");
-		// for (E edge : outgoingList) {
-		// sb.append(" --> " + "[" + edge.destination.toString() + "]");
-		// }
-		// return sb.toString();
-		// }
+		@Override
+		 public String toString() {
+			 return ("(" + m_key_V.toString() + ")");
+		 }
 	}
 
 	/**
@@ -411,7 +422,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		 */
 		// TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using
 		// only Vertex Origin or Vertex Destination
-		public Edge(E key, double weight, V origin, V destination) {
+		private Edge(E key, double weight, V origin, V destination) {
 			m_key_E = key;
 			this.origin = origin;
 			this.destination = destination;
@@ -432,6 +443,12 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 				return false;
 			}
 		}
+		
+		@Override
+		public String toString(){
+			return "---"+m_weight+"--->"+m_vList.get(destination).toString();
+		}
+		
 
 	}
 
