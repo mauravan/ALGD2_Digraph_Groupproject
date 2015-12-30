@@ -4,24 +4,18 @@ package digraph;
 public class FirstMain {
 
 	public static void main(String[] args) {
-		DigraphOld<Integer, String> test = new DigraphOld<>(5);
-		test.addVertex(5);
-		test.addVertex(6);
-//		test.addEdge(0, test.getVertex(5), test.getVertex(6));
-//		
-//		test.addVertex(200);
-//		test.addVertex(344);
-//		test.addVertex(53);
-//		test.addEdge(0, test.getVertex(5), test.getVertex(53));
-//		test.addEdge(0, test.getVertex(200), test.getVertex(344));
-//		test.addEdge(0, test.getVertex(344), test.getVertex(200));
-//		test.addEdge(0, test.getVertex(200), test.getVertex(344));
+		Digraph<Integer, String> test = new Digraph<>();
 		
-		test.addVertex(60);
-		test.addVertex(70);
-		test.addVertex(80);
-
-		test.printGraph();
+		test.addVertex(1);
+		test.addVertex(2);
+		test.addVertex(3);
+		test.addVertex(4);
+		test.addEdge("erster", 10, 1, 2);
+		test.addEdge("zweiter", 20, 2, 3);
+		test.addEdge("dritter", 30, 3, 4);
+		test.addEdge("vierter", 10, 1, 3);
+		
+		System.out.println(test.toString());
 	}
 
 }

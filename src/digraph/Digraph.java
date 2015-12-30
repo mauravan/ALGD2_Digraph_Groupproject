@@ -19,7 +19,10 @@ import java.util.stream.Collectors;
 /**
  * A directed, weighted (only positive) Graph which allows self-loops and
  * multiedges using a HashSet to store all the Vertices. To allow weighted Edges
- * and nested Adjacency Lists we used the inner classes Vertex<V> and Edge<E>.
+ * and nested Adjacency Lists we used the inner classes Vertex and Edge.
+ * 
+ * The Verticies and Edges are reffered by key. Those Key-Values are unique.
+ * If one adds a key that is already present in the Graph, the old value will be discarded.
  * 
  * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
  *
@@ -32,12 +35,12 @@ import java.util.stream.Collectors;
 public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	/**
-	 * internal Datastructure used to Store Vertices
+	 * internal Datastructure used to store all Vertices
 	 */
 	private HashMap<V, Vertex> m_vList;
 
 	/**
-	 * internal Datastructure used to Store Edges
+	 * internal Datastructure used to store all Edges
 	 */
 	private HashMap<E, Edge> m_eList;
 
@@ -49,13 +52,15 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 	/**
 	 * Construct a Digraph with initialCapacity = size and loadFactor = 0.75
 	 * 
-	 * @param size
-	 *            sets the Size of initialCapacity
+	 * @param sizeVertex
+	 *            sets the size of the internal vertex hashmap
+	 * @param sizeEdge
+	 * 			  sets the size of the internal edge hashmap
 	 * @throws IllegalArgumentException
 	 *             - if the initial capacity is negative
 	 */
-	public Digraph(int sizeVector, int sizeEdge) {
-		m_vList = new HashMap<>(sizeVector);
+	public Digraph(int sizeVertex, int sizeEdge) {
+		m_vList = new HashMap<>(sizeVertex);
 		m_eList = new HashMap<>(sizeEdge);
 	}
 
@@ -63,19 +68,28 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 	 * Construct a Digraph with initialCapacity = size and loadFactor =
 	 * loadFactor
 	 * 
-	 * @param size
-	 *            sets the Size of initialCapacity
-	 * @param loadFactor
-	 *            sets loadFactor of HashMap
+	 * @param sizeVertex
+	 *            sets the size of the internal vertex hashmap
+	 * @param sizeEdge
+	 * 			  sets the size of the internal edge hashmap
+	 * @param loadFactorVertex
+	 *            sets loadFactor of the vertex hashmap
+	 * @param loadFactorEdge
+	 *            sets loadFactor of the edge hashmap
 	 * @throws IllegalArgumentException
 	 *             - if the initial capacity is negative or the load factor is
 	 *             nonpositive.
 	 */
-	public Digraph(int sizeVector, int sizeEdge, float loadFactorVector, float loadFactorEdge) {
-		m_vList = new HashMap<>(sizeVector, loadFactorVector);
+	public Digraph(int sizeVertex, int sizeEdge, float loadFactorVertex, float loadFactorEdge) {
+		m_vList = new HashMap<>(sizeVertex, loadFactorVertex);
 		m_eList = new HashMap<>(sizeEdge, loadFactorEdge);
 	}
 
+	/**
+	 * clone the graph object using serialization to break selfloops
+	 * 
+	 * @return the new clone
+	 */
 	public Object clone() {
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -93,6 +107,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 		assert (weight>=0) : "weight must be >= 0";
 		if (containsVertex(origin) && containsVertex(destination)) {
 			Edge edge = new Edge(key, weight, origin, destination);
+			//add the new edge to the graph hashmap and the specific outgoint/incominglists
 			m_eList.put(key, edge);
 			m_vList.get(origin).outgoingList.add(key);
 			m_vList.get(destination).incomingList.add(key);
@@ -135,14 +150,12 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	@Override
 	public int indegOf(V vertex) {
-
 		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).incomingList.size();
 	}
 
 	@Override
 	public int outdegOf(V vertex) {
-
 		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).outgoingList.size();
 	}
@@ -193,7 +206,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 	@Override
 	public V getEdgeDestination(E edge) {
 		assert (containsEdge(edge)) : "Edge must be in list";
-		return m_eList.get(edge).destination;
+		return m_eList.get(edge).destination;	
 	}
 
 	@Override
@@ -234,9 +247,23 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 	}
 
 	@Override
-	public boolean removeVertex(V v) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeVertex(V vertex) {
+		//check if vertex is in graph
+		if(!containsVertex(vertex))
+			return false;
+		
+		//get all edges touching v (all incoming and outgoing)
+		DLinkedList<E> touchingEdges = (DLinkedList<E>) m_vList.get(vertex).outgoingList;
+		touchingEdges.conc(m_vList.get(vertex).incomingList,true);		
+		
+		//remove all those edges
+		if(!removeAllEdges(touchingEdges))
+			return false;		
+		
+		//remove v from vertex-hashmap
+		m_vList.remove(vertex);
+		
+		return true;
 	}
 
 	@Override
@@ -357,6 +384,20 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 		return null;
 	}
 	
+		@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+		
+		for (Vertex v : m_vList.values()) {
+			sb.append(v.toString());
+			for (E e : v.outgoingList) {
+				sb.append(m_eList.get(e).toString());
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
+	
 	/**
 	 * 
 	 * @param e Edge which should be tested for shortest path
@@ -423,15 +464,10 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 			return m_key_V.equals(((Vertex) o).m_key_V);
 		}
 
-		// TODO: FIX
-		// public String toString() {
-		// StringBuilder sb = new StringBuilder();
-		// sb.append("[" + m_key_V.toString() + "]");
-		// for (E edge : outgoingList) {
-		// sb.append(" --> " + "[" + edge.destination.toString() + "]");
-		// }
-		// return sb.toString();
-		// }
+		@Override
+		 public String toString() {
+			 return ("(" + m_key_V.toString() + ")");
+		 }
 	}
 
 	/**
@@ -465,7 +501,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 		 */
 		// TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using
 		// only Vertex Origin or Vertex Destination
-		public Edge(E key, double weight, V origin, V destination) {
+		private Edge(E key, double weight, V origin, V destination) {
 			m_key_E = key;
 			this.origin = origin;
 			this.destination = destination;
@@ -486,6 +522,12 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 				return false;
 			}
 		}
+		
+		@Override
+		public String toString(){
+			return "---"+m_weight+"--->"+m_vList.get(destination).toString();
+		}
+		
 
 	}
 
