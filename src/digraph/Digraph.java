@@ -357,10 +357,9 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	@Override
 	public HashMap<V, Double> dijkstra(V origin) {
-		//init
-		//D ist Hashmap mit Key = Vertex und 
-		//Value = Wert des momentan kürzesten Pfades von origin nach v.
-		//enthält den Nachbarknoten über den der kürzeste Pfad geht
+		//BEGIN INIT
+		//D ist Hashmap mit Key = Vertex und Value = Wert des momentan kürzesten Pfades von origin nach v.
+		//A enthält den Nachbarknoten über den der kürzeste Pfad geht
 		HashMap<V, Double> d = new HashMap<>();
 		LinkedList<V> a = new LinkedList<>();
 		//Mit maximaler Anzahl initialisieren, damit immer kürzere Pfade gefunden werden können
@@ -370,18 +369,50 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 		}
 		d.put(origin, 0.0);
 		LinkedList<V> perm = new LinkedList<>();
-		
 		PQueue<V> pq = new PQueue<>(new Comparator<V>() {
-
 			@Override
 			public int compare(V o1, V o2) {
-				return 0;
+				return (int) (d.get(o1)-d.get(o2));
 			}
-
-			
-			
 		});
+		pq.add(origin);
+		//END INIT
+		while (!pq.isEmpty()) {
+			V u = pq.removeMin();
+			for (E e : m_vList.get(u).outgoingList) {
+				V v = getEdgeDestination(e);
+				if (d.get(v) == Double.MAX_VALUE) {
+					pq.add(v);
+				}
+				E edge = getEdgesBetween(u, v).iterator().next();
+				if (test(edge, d, a)) {
+					//TODO
+				}
+			}
+			perm.add(u);
+		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param e Edge which should be tested for shortest path
+	 * @param d actual Values of shortest path from origin to all Vertices with key V
+	 * @param a actual Vertices sequence of shortest path
+	 * @return
+	 */
+	private boolean test(E e, HashMap<V, Double> d, LinkedList<V> a){
+		V u = m_eList.get(e).origin;
+		V v = m_eList.get(e).destination;
+		Edge edge = m_eList.get(e);
+		//prüft ob aktuelle strecke grösser ist als start-vertex und kantengewicht und ersetzt
+		if (d.get(v) > d.get(u)+edge.m_weight) {
+			d.put(v, (d.get(u)+edge.m_weight));
+			a.add(v); //enthält den Nachbarknoten über den der kürzeste Pfad geht
+			return true;
+		}
+		return false;
+		
 	}
 	
 		@Override
@@ -396,26 +427,6 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 			sb.append("\n");
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * 
-	 * @param e Edge which should be tested for shortest path
-	 * @param d actual Values of shortest path from origin to all Vertices with key V
-	 * @param a actual Vertices sequence of shortest path
-	 * @return
-	 */
-	private boolean test(Edge e, HashMap<V, Double> d, LinkedList<V> a){
-		V u = e.origin;
-		V v = e.destination;
-		//prüft ob aktuelle strecke grösser ist als start-vertex und kantengewicht und ersetzt
-		if (d.get(v) > d.get(u)+e.m_weight) {
-			d.put(v, (d.get(u)+e.m_weight));
-			a.add(v); //enthält den Nachbarknoten über den der kürzeste Pfad geht
-			return true;
-		}
-		return false;
-		
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
