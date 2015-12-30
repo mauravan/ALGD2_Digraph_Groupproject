@@ -301,93 +301,12 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	// @Override
-	// public ArrayList<Set<V>> dijkstra(V origin) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	///////////////////////////////////// INNER
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CLASSES////////////////////////////////////////////////////////////////////
-	/**
-	 * Representing the weighted Edges in a Graph.
-	 * 
-	 * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
-	 * @param <E>
-	 *            Type of the Edge
-	 * 
-	 */
-	private class Edge {
-		private double m_weight;
-		// TODO: Delete if not needed!
-		private V origin;
-		private V destination;
-
-		private E m_key_E;
-
-		public double getWeight() {
-			return m_weight;
-		}
-		private E getKey() {
-			return m_key_E;
-		}
-
-		/**
-	     * Representing the weighted Edges in a Graph.
-	     * 
-	     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
-	     * @param <E> Type of the Edge
-	     * 
-	     */
-	    private class Edge {
-	        private double m_weight;
-	        // TODO: Delete if not needed!
-	        private V origin;
-	        private V destination;
-	        
-	        private E m_key_E;
-
-		/**
-		 * Constructor for Edges. Destination and Origin have to be in the same
-		 * graph
-		 * 
-		 * @param weight
-		 *            defines the "cost" of an Edge. Use 0 for unweighed Edges.
-		 *            Only works for positive weights
-		 * @param origin
-		 *            * Vertex from which the Edge comes. Can be same as
-		 *            destination.
-		 * @param destination
-		 *            Vertex to which the Edge goes. Can be same as origin.
-		 */
-		// TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using
-		// only Vertex Origin or Vertex Destination
-		public Edge(E key, double weight, V origin, V destination) {
-			m_key_E = key;
-			this.origin = origin;
-			this.destination = destination;
-			m_weight = weight;
-		}
-
-		/**
-		 * Checks if origin and destination are equal
-		 * 
-		 * @param o
-		 * @return true if they are. false otherwise.
-		 */
-		public boolean equals(Object o) {
-			try {
-				return (origin.equals(((Edge) o).origin) && destination.equals(((Edge) o).destination)
-						&& m_weight == ((Edge) o).m_weight);
-			} catch (Exception e) {
-				return false;
-			}
-		}
-
-	}
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//	INNER CLASSES
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	     * Representing the Vertices in the Graph. Stores all his Neighbors in a adjacencyList using a HashSet.
 	     * 
@@ -438,39 +357,59 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 	//        }
 	    }
 
+	/**
+	     * Representing the weighted Edges in a Graph.
+	     * 
+	     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
+	     * @param <E> Type of the Edge
+	     * 
+	     */
+	    private class Edge {
+	        private double m_weight;
+	        // TODO: Delete if not needed!
+	        private V origin;
+	        private V destination;
+	        
+	        private E m_key_E;
+	
 		/**
-		 * Number of edges landing on this Vertex. For outdeg use
-		 * adjacencylist.lenght()
+		 * Constructor for Edges. Destination and Origin have to be in the same
+		 * graph
+		 * 
+		 * @param weight
+		 *            defines the "cost" of an Edge. Use 0 for unweighed Edges.
+		 *            Only works for positive weights
+		 * @param origin
+		 *            * Vertex from which the Edge comes. Can be same as
+		 *            destination.
+		 * @param destination
+		 *            Vertex to which the Edge goes. Can be same as origin.
 		 */
-		private int indeg;
-
-		private Vertex(V key) {
-			m_key_V = key;
-			outgoingList = new DLinkedList<>();
-			incomingList = new DLinkedList<>();
-			indeg = 0;
+		// TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using
+		// only Vertex Origin or Vertex Destination
+		public Edge(E key, double weight, V origin, V destination) {
+			m_key_E = key;
+			this.origin = origin;
+			this.destination = destination;
+			m_weight = weight;
 		}
-
+	
 		/**
-		 * Only checks if keys are equal.
+		 * Checks if origin and destination are equal
 		 * 
 		 * @param o
-		 * @return true if key of given Vertex is equal. False otherwise.
+		 * @return true if they are. false otherwise.
 		 */
-		@SuppressWarnings("unchecked")
 		public boolean equals(Object o) {
-			return m_key_V.equals(((Vertex) o).m_key_V);
+			try {
+				return (origin.equals(((Edge) o).origin) && destination.equals(((Edge) o).destination)
+						&& m_weight == ((Edge) o).m_weight);
+			} catch (Exception e) {
+				return false;
+			}
 		}
-
-		// TODO: FIX
-		// public String toString() {
-		// StringBuilder sb = new StringBuilder();
-		// sb.append("[" + m_key_V.toString() + "]");
-		// for (E edge : outgoingList) {
-		// sb.append(" --> " + "[" + edge.destination.toString() + "]");
-		// }
-		// return sb.toString();
-		// }
+	
 	}
+
 
 }
