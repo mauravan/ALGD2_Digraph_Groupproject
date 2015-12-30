@@ -232,9 +232,23 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 	}
 
 	@Override
-	public boolean removeVertex(V v) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeVertex(V vertex) {
+		//check if vertex is in graph
+		if(!containsVertex(vertex))
+			return false;
+		
+		//get all edges touching v (all incoming and outgoing)
+		DLinkedList<E> touchingEdges = (DLinkedList<E>) m_vList.get(vertex).outgoingList;
+		touchingEdges.conc(m_vList.get(vertex).incomingList,true);		
+		
+		//remove all those edges
+		if(!removeAllEdges(touchingEdges))
+			return false;		
+		
+		//remove v from vertex-hashmap
+		m_vList.remove(vertex);
+		
+		return true;
 	}
 
 	@Override
