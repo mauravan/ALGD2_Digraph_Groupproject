@@ -1,5 +1,10 @@
 package digraph;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +27,7 @@ import java.util.stream.Collectors;
  *            The Type of the Edges
  * 
  */
-public class Digraph<V, E> implements IDigraph<V, E> {
+public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	/**
 	 * internal Datastructure used to Store Vertices
@@ -69,13 +74,16 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		m_eList = new HashMap<>(sizeEdge, loadFactorEdge);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object clone() {
-		//TODO: Use Serializing because of possible Loops. Update Documentation!>s
-		Digraph<V, E> clone = new Digraph<>();
-		clone.m_eList = (HashMap<E, Digraph<V, E>.Edge>) m_eList.clone();
-		clone.m_vList = (HashMap<V, Digraph<V, E>.Vertex>) m_vList.clone();
-		return clone;
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream oout = new ObjectOutputStream(out);
+			oout.writeObject(this);
+			ObjectInputStream oin = new ObjectInputStream(new ByteArrayInputStream(out.toByteArray()));
+			return oin.readObject();
+		} catch (Exception e) {
+			throw new RuntimeException("cannot clone class");
+		}
 	}
 
 	@Override
