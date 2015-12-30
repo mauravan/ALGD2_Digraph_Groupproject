@@ -6,8 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -328,9 +330,53 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	@Override
 	public HashMap<V, Double> dijkstra(V origin) {
-		// TODO Auto-generated method stub
+		//init
+		//D ist Hashmap mit Key = Vertex und 
+		//Value = Wert des momentan kürzesten Pfades von origin nach v.
+		//enthält den Nachbarknoten über den der kürzeste Pfad geht
+		HashMap<V, Double> d = new HashMap<>();
+		LinkedList<V> a = new LinkedList<>();
+		//Mit maximaler Anzahl initialisieren, damit immer kürzere Pfade gefunden werden können
+		for (V v : m_vList.keySet()) {
+			d.put(v, Double.MAX_VALUE);
+			a.add(null);
+		}
+		d.put(origin, 0.0);
+		LinkedList<V> perm = new LinkedList<>();
+		
+		PQueue<V> pq = new PQueue<>(new Comparator<V>() {
+
+			@Override
+			public int compare(V o1, V o2) {
+				return 0;
+			}
+
+			
+			
+		});
 		return null;
 	}
+	
+	/**
+	 * 
+	 * @param e Edge which should be tested for shortest path
+	 * @param d actual Values of shortest path from origin to all Vertices with key V
+	 * @param a actual Vertices sequence of shortest path
+	 * @return
+	 */
+	private boolean test(Edge e, HashMap<V, Double> d, LinkedList<V> a){
+		V u = e.origin;
+		V v = e.destination;
+		//prüft ob aktuelle strecke grösser ist als start-vertex und kantengewicht und ersetzt
+		if (d.get(v) > d.get(u)+e.m_weight) {
+			d.put(v, (d.get(u)+e.m_weight));
+			a.add(v); //enthält den Nachbarknoten über den der kürzeste Pfad geht
+			return true;
+		}
+		return false;
+		
+	}
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// INNER CLASSES
