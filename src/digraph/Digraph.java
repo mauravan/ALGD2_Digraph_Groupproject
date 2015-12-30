@@ -66,6 +66,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
     
 	@SuppressWarnings("unchecked")
 	public Object clone() {
+		//TODO: Use Serializing because of possible Loops. Update Documentation!>s
 		Digraph<V, E> clone = new Digraph<>();
 		clone.m_eList = (HashMap<E, Digraph<V, E>.Edge>) m_eList.clone();
 		clone.m_vList = (HashMap<V, Digraph<V, E>.Vertex>) m_vList.clone();
@@ -74,7 +75,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public boolean addEdge(E key, double weight, V origin, V destination) {
-		assert (weight>=0) : "weight must be <= 0";
+		assert (weight>=0) : "weight must be >= 0";
 		if (containsVertex(origin) && containsVertex(destination)) {
 			Edge edge = new Edge(key, weight, origin, destination);
 			m_eList.put(key, edge);
@@ -118,13 +119,13 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public int indegOf(V vertex) {
-		assert (containsVertex(vertex)) : "Vertex must be in list";
+		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).incomingList.size();
 	}
 
 	@Override
 	public int outdegOf(V vertex) {
-		assert (containsVertex(vertex)) : "Vertex must be in list";
+		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		return m_vList.get(vertex).outgoingList.size();
 	}
 
@@ -140,6 +141,7 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	@Override
 	public Set<E> getAllEdgesOfVertex(V vertex) {
+		assert (containsVertex(vertex)) : "Vertex must be in this Graph";
 		DLinkedList<E> inc = (DLinkedList<E>) m_vList.get(vertex).incomingList;
 		DLinkedList<E> out = (DLinkedList<E>) m_vList.get(vertex).outgoingList;
 		inc.conc(out, true);
