@@ -19,13 +19,16 @@ import java.util.Set;
  * @param <E> The Type of the Edges
  * 
  */
-public class Digraph<V, E> implements IDigraph<V, E> {
+public class Digraph<V, E> implements IDigraph<V, E>{
 
 	/**
 	 * internal Datastructure used to Store Vertices
 	 */
 	private HashMap<V, Vertex> m_vList;
 	
+	/**
+	 * internal Datastructure used to Store Edges
+	 */
 	private HashMap<E, Edge> m_eList;
 
     /**
@@ -55,8 +58,9 @@ public class Digraph<V, E> implements IDigraph<V, E> {
      * @param size sets the Size of initialCapacity
      * @throws IllegalArgumentException - if the initial capacity is negative
      */
-    public Digraph(int size) {
-        m_vList = new HashMap<>(size);
+    public Digraph(int sizeVector, int sizeEdge) {
+        m_vList = new HashMap<>(sizeVector);
+        m_eList = new HashMap<>(sizeEdge);
         m_size = 0;
         m_size_E = 0;
     }
@@ -69,8 +73,9 @@ public class Digraph<V, E> implements IDigraph<V, E> {
      * @throws IllegalArgumentException - if the initial capacity is negative or the load factor is
      *             nonpositive.
      */
-    public Digraph(int size, float loadFactor) {
-        m_vList = new HashMap<>(size, loadFactor);
+    public Digraph(int sizeVector, int sizeEdge, float loadFactorVector, float loadFactorEdge) {
+        m_vList = new HashMap<>(sizeVector, loadFactorVector);
+        m_eList = new HashMap<>(sizeEdge, loadFactorEdge);
         m_size = 0;
         m_size_E = 0;
     }
@@ -78,6 +83,20 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 
 	public Object clone() {
 		return null;
+	}
+
+	
+
+//	@Override
+//	public ArrayList<Set<V>> dijkstra(V origin) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+	
+	@Override
+	public boolean addEdge(E key, double weigth, V origin, V destination) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
@@ -189,11 +208,10 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 	}
 
 	@Override
-	public void setEdgeWeight(E e, double weight) {
+	public void setEdgeWeight(E edge, double weight) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public boolean removeAllEdges(Collection<? extends E> edges) {
@@ -225,157 +243,28 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		return null;
 	}
 
-	@Override
+	//	@Override
+	//	public ArrayList<Set<V>> dijkstra(V origin) {
+	//		// TODO Auto-generated method stub
+	//		return null;
+	//	}
+		
+		@Override
 	public boolean removeAllVertices(Collection<? extends V> vertices) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public Set<V> dijkstra(V origin, V destination) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public ArrayList<Set<V>> dijkstra(V origin) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-	
 	@Override
 	public int getNumberOfVerts() {
 		// TODO Auto-generated method stub
-		return m_size;
+		return 0;
 	}
 
 	@Override
 	public int getNumberOfEdges() {
 		// TODO Auto-generated method stub
-		return m_size_E;
-	}
-	
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////INNER CLASSES////////////////////////////////////////////////////////////////////
-	/**
-     * Representing the weighted Edges in a Graph.
-     * 
-     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
-     * @param <E> Type of the Edge
-     * 
-     */
-    private class Edge {
-        private double m_weight;
-        // TODO: Delete if not needed!
-        private V origin;
-        private V destination;
-        
-        private E m_key_E;
-
-        public double getWeight() {
-            return m_weight;
-        }
-
-        /**
-         * Only works for positive weights.
-         * 
-         * @param weight
-         */
-        public void setWeight(double weight) {
-            m_weight = weight;
-        }
-
-        /**
-         * Constructor for Edges. Destination and Origin have to be in the same graph
-         * 
-         * @param weight defines the "cost" of an Edge. Use 0 for unweighed Edges. Only works for
-         *            positive weights
-         * @param origin * Vertex from which the Edge comes. Can be same as destination.
-         * @param destination Vertex to which the Edge goes. Can be same as origin.
-         */
-        //TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using only Vertex Origin or Vertex Destination
-        public Edge(E key, double weight, V origin, V destination) {
-        	m_key_E = key;
-            this.origin = origin;
-            this.destination = destination;
-            m_weight = weight;
-        }
-
-        /**
-         * Checks if origin and destination are equal
-         * 
-         * @param o
-         * @return true if they are. false otherwise.
-         */
-        public boolean equals(Object o) {
-            try {
-                return (origin.equals(((Edge) o).origin) && destination.equals(((Edge) o).destination) && m_weight == ((Edge) o).m_weight);
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-    }
-
-    /**
-     * Representing the Vertices in the Graph. Stores all his Neighbors in a adjacencyList using a HashSet.
-     * 
-     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
-     *  
-     * @param <V> Type of the Vertex
-     */
-    private class Vertex {
-        /**
-         * Unique Identifier
-         */
-        private V m_key_V;
-        /**
-         * Index of vList in with the adjacency list is stored
-         */
-        private List<E> outgoingList;
-        /**
-         * Used to efficiently delete Vertices from the Graph.
-         */
-        private List<E> incomingList;
-
-        /**
-         * Number of edges landing on this Vertex. For outdeg use adjacencylist.lenght()
-         */
-        private int indeg;
-
-        private Vertex(V key) {
-            m_key_V = key;
-            outgoingList = new DLinkedList<>();
-            incomingList = new DLinkedList<>();
-            indeg = 0;
-        }
-
-        /**
-         * Only checks if keys are equal.
-         * 
-         * @param o
-         * @return true if key of given Vertex is equal. False otherwise.
-         */
-        @SuppressWarnings("unchecked")
-        public boolean equals(Object o) {
-            return m_key_V.equals(((Vertex) o).m_key_V);
-        }
-
-//        TODO: FIX
-//        public String toString() {
-//            StringBuilder sb = new StringBuilder();
-//            sb.append("[" + m_key_V.toString() + "]");
-//            for (E edge : outgoingList) {
-//                sb.append(" --> " + "[" + edge.destination.toString() + "]");
-//            }
-//            return sb.toString();
-//        }
-    }
-
-	@Override
-	public boolean addEdge(E key, double weigth, V origin, V destination) {
-		// TODO Auto-generated method stub
-		return false;
+		return 0;
 	}
 
 	@Override
@@ -389,6 +278,129 @@ public class Digraph<V, E> implements IDigraph<V, E> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	//	@Override
+	//	public ArrayList<Set<V>> dijkstra(V origin) {
+	//		// TODO Auto-generated method stub
+	//		return null;
+	//	}
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		/////////////////////////////////////INNER CLASSES////////////////////////////////////////////////////////////////////
+		/**
+	     * Representing the weighted Edges in a Graph.
+	     * 
+	     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
+	     * @param <E> Type of the Edge
+	     * 
+	     */
+	    private class Edge {
+	        private double m_weight;
+	        // TODO: Delete if not needed!
+	        private V origin;
+	        private V destination;
+	        
+	        private E m_key_E;
+	
+	        public double getWeight() {
+	            return m_weight;
+	        }
+	
+	        /**
+	         * Only works for positive weights.
+	         * 
+	         * @param weight
+	         */
+	        public void setWeight(double weight) {
+	            m_weight = weight;
+	        }
+	
+	        /**
+	         * Constructor for Edges. Destination and Origin have to be in the same graph
+	         * 
+	         * @param weight defines the "cost" of an Edge. Use 0 for unweighed Edges. Only works for
+	         *            positive weights
+	         * @param origin * Vertex from which the Edge comes. Can be same as destination.
+	         * @param destination Vertex to which the Edge goes. Can be same as origin.
+	         */
+	        //TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using only Vertex Origin or Vertex Destination
+	        public Edge(E key, double weight, V origin, V destination) {
+	        	m_key_E = key;
+	            this.origin = origin;
+	            this.destination = destination;
+	            m_weight = weight;
+	        }
+	
+	        /**
+	         * Checks if origin and destination are equal
+	         * 
+	         * @param o
+	         * @return true if they are. false otherwise.
+	         */
+	        public boolean equals(Object o) {
+	            try {
+	                return (origin.equals(((Edge) o).origin) && destination.equals(((Edge) o).destination) && m_weight == ((Edge) o).m_weight);
+	            } catch (Exception e) {
+	                return false;
+	            }
+	        }
+	
+	    }
+
+	/**
+	     * Representing the Vertices in the Graph. Stores all his Neighbors in a adjacencyList using a HashSet.
+	     * 
+	     * @author Roman Meier, Alex Melliger, Matthias Keller, Stefan Mettler
+	     *  
+	     * @param <V> Type of the Vertex
+	     */
+	    private class Vertex {
+	        /**
+	         * Unique Identifier
+	         */
+	        private V m_key_V;
+	        /**
+	         * Index of vList in with the adjacency list is stored
+	         */
+	        private List<E> outgoingList;
+	        /**
+	         * Used to efficiently delete Vertices from the Graph.
+	         */
+	        private List<E> incomingList;
+	
+	        /**
+	         * Number of edges landing on this Vertex. For outdeg use adjacencylist.lenght()
+	         */
+	        private int indeg;
+	
+	        private Vertex(V key) {
+	            m_key_V = key;
+	            outgoingList = new DLinkedList<>();
+	            incomingList = new DLinkedList<>();
+	            indeg = 0;
+	        }
+	
+	        /**
+	         * Only checks if keys are equal.
+	         * 
+	         * @param o
+	         * @return true if key of given Vertex is equal. False otherwise.
+	         */
+	        @SuppressWarnings("unchecked")
+	        public boolean equals(Object o) {
+	            return m_key_V.equals(((Vertex) o).m_key_V);
+	        }
+	
+	//        TODO: FIX
+	//        public String toString() {
+	//            StringBuilder sb = new StringBuilder();
+	//            sb.append("[" + m_key_V.toString() + "]");
+	//            for (E edge : outgoingList) {
+	//                sb.append(" --> " + "[" + edge.destination.toString() + "]");
+	//            }
+	//            return sb.toString();
+	//        }
+	    }
 
 
 
