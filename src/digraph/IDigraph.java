@@ -27,8 +27,8 @@ public interface IDigraph<V, E> {
 	boolean addVertex(V vertex);
 	
 	/**
-	 * 
-	 * @return Shallow Copy of the Graph
+	 * Clone the Graph using serializing (possible loops and cycles will cloned valid)
+	 * @return serialized clone from Digraph.
 	 */
 	Object clone();
 	
