@@ -358,9 +358,6 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	@Override
 	public HashMap<V, Double> dijkstra(V origin) {
-		
-		
-		
 		//BEGIN INIT
 		//D ist Hashmap mit Key = Vertex und Value = Wert des momentan kürzesten Pfades von origin nach v.
 		//A enthält den Nachbarknoten über den der kürzeste Pfad geht
@@ -374,13 +371,6 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 		d.put(origin, 0.0);
 		LinkedList<V> perm = new LinkedList<>();
 		PQueue<V> pq = new PQueue<>(new Comparator<V>() {
-			@Override
-			public int compare(V o1, V o2) {
-				return (int) (d.get(o1)-d.get(o2));
-			}
-		});
-		
-		PriorityQueue<V> pq2 = new PriorityQueue<>(new Comparator<V>() {
 			@Override
 			public int compare(V o1, V o2) {
 				return (int) (d.get(o1)-d.get(o2));
@@ -405,6 +395,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 			perm.add(u);
 		}
 		return d;
+		
 	}
 	
 	/**
