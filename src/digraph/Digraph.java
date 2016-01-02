@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -357,6 +358,9 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 
 	@Override
 	public HashMap<V, Double> dijkstra(V origin) {
+		
+		
+		
 		//BEGIN INIT
 		//D ist Hashmap mit Key = Vertex und Value = Wert des momentan kürzesten Pfades von origin nach v.
 		//A enthält den Nachbarknoten über den der kürzeste Pfad geht
@@ -375,6 +379,14 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 				return (int) (d.get(o1)-d.get(o2));
 			}
 		});
+		
+		PriorityQueue<V> pq2 = new PriorityQueue<>(new Comparator<V>() {
+			@Override
+			public int compare(V o1, V o2) {
+				return (int) (d.get(o1)-d.get(o2));
+			}
+		});
+		
 		pq.add(origin);
 		//END INIT
 		while (!pq.isEmpty()) {
@@ -386,12 +398,13 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 				}
 				E edge = getEdgesBetween(u, v).iterator().next();
 				if (test(edge, d, a)) {
-					//TODO
+					PQItem tmp = pq.getFirstItem();
+					pq.updateData(tmp, v);
 				}
 			}
 			perm.add(u);
 		}
-		return null;
+		return d;
 	}
 	
 	/**
