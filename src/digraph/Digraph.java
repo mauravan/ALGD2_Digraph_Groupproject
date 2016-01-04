@@ -350,11 +350,11 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
         // nach v.
         // A enth�lt den Nachbarknoten �ber den der k�rzeste Pfad geht
         HashMap<V, Double> d = new HashMap<>();
-        LinkedList<V> a = new LinkedList<>();
+        HashMap<V, V> a = new HashMap<>();
         // Mit maximaler Anzahl initialisieren, damit immer k�rzere Pfade gefunden werden k�nnen
         for (V v : m_vList.keySet()) {
             d.put(v, Double.MAX_VALUE);
-            a.add(null);
+            a.put(v, null);
         }
         d.put(origin, 0.0);
         LinkedList<V> perm = new LinkedList<>();
@@ -383,6 +383,9 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
             }
             perm.add(u);
         }
+        for (V v : a.keySet()) {
+			System.out.println(a.get(v) +" => " +v);
+		}
         return d;
 
     }
@@ -394,14 +397,14 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
      * @param a actual Vertices sequence of shortest path
      * @return
      */
-    private boolean test(E e, HashMap<V, Double> d, LinkedList<V> a) {
+    private boolean test(E e, HashMap<V, Double> d, HashMap<V, V> a) {
         V u = m_eList.get(e).origin;
         V v = m_eList.get(e).destination;
         Edge edge = m_eList.get(e);
         // pr�ft ob aktuelle strecke gr�sser ist als start-vertex und kantengewicht und ersetzt
         if (d.get(v) > d.get(u) + edge.m_weight) {
             d.put(v, (d.get(u) + edge.m_weight));
-            a.add(v); // enth�lt den Nachbarknoten �ber den der k�rzeste Pfad geht
+            a.put(v, u); // enth�lt den Nachbarknoten �ber den der k�rzeste Pfad geht
             return true;
         }
         return false;
