@@ -342,7 +342,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
         // TODO Auto-generated method stub
         return 0;
     }
-
+    
     @Override
     public HashMap<V, Double> dijkstra(V origin) {
         // BEGIN INIT
@@ -410,8 +410,45 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
         return false;
 
     }
+    
+    /**
+     * depthFirstSearch to traverse through graph and create spanning tree.
+     * Time complexity: O(n+m)
+     * @return HashMap with vertex v as key and forerunner vertex v as value
+     */
+    public HashMap<V, V> depthFirstSearch(){
+    	HashMap<V, V> a = new HashMap<>();
+    	for (V v : m_vList.keySet()) {
+			m_vList.get(v).color = dfsColor.white;
+			a.put(v, null);
+		}
+    	for (V v : m_vList.keySet()) {
+			if(m_vList.get(v).color == dfsColor.white){
+				dfsVisit(v, a);
+			}
+		}
+    	return a;
+    }
+    
+    /**
+     * visit for backtracking depthFirstSearch
+     * 
+     * @param vertex to go deep inside
+     * @param HashMap with vertex v as key and forerunner vertex v as value 
+     */
+    private void dfsVisit(V v, HashMap<V, V> a) {
+    	m_vList.get(v).color = dfsColor.grey;
+    	for (E e : m_vList.get(v).outgoingList) {
+    		V w = getEdgeDestination(e);
+    		if (m_vList.get(w).color == dfsColor.white) {
+				a.put(w, v);
+				dfsVisit(w, a);
+			}
+		}
+    	m_vList.get(v).color = dfsColor.black;
+	}
 
-    @Override
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
@@ -440,7 +477,14 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
      * @param <V> Type of the Vertex
      */
     private class Vertex {
-        /**
+    	
+    	
+    	/**
+    	 * Color from Vertex. Needed at depthFirstSearch to create Spanning trees
+    	 */
+    	private dfsColor color;
+
+		/**
          * Unique Identifier
          */
         private V m_key_V;
@@ -528,5 +572,12 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
         }
 
     }
+    
+    /**
+     * 
+     * Enum for depthFirstSearch to create Spanning Trees
+     *
+     */
+    public enum dfsColor {white, black, grey};
 
 }
