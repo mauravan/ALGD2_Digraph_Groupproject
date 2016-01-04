@@ -13,16 +13,15 @@ public class DijkstraMain {
 		test.addVertex('C');
 		test.addVertex('D');
 		test.addVertex('E');
-		test.addVertex('F');
 		
-		test.addEdge("ab", 4, 'A', 'B');
-		test.addEdge("ac", 2, 'A', 'C');
-		test.addEdge("ae", 4, 'A', 'E');
-		test.addEdge("bc", 1, 'B', 'C');
+		test.addEdge("ab", 2, 'A', 'B');
+		test.addEdge("ac", 1, 'A', 'C');
+		test.addEdge("ad", 4, 'A', 'D');
+		test.addEdge("bd", 1, 'B', 'D');
+		test.addEdge("bc", 2, 'B', 'C');
 		test.addEdge("cd", 3, 'C', 'D');
-		test.addEdge("ce", 5, 'C', 'E');
-		test.addEdge("df", 2, 'D', 'F');
-		test.addEdge("ef", 1, 'E', 'F');
+		test.addEdge("ce", 1, 'C', 'E');
+		test.addEdge("de", 2, 'D', 'E');
 		
 		HashMap<Character, Double> dij = test.dijkstra('A');
 		for (Character c : dij.keySet()) {
