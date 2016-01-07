@@ -416,7 +416,7 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
      * Time complexity: O(n+m)
      * @return HashMap with vertex v as key and forerunner vertex v as value
      */
-    public HashMap<V, V> depthFirstSearch(){
+    public void depthFirstSearch(){
     	HashMap<V, V> a = new HashMap<>();
     	for (V v : m_vList.keySet()) {
 			m_vList.get(v).color = dfsColor.white;
@@ -427,7 +427,10 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 				dfsVisit(v, a);
 			}
 		}
-    	return a;
+    	
+    	for (V v : a.keySet()) {
+			System.out.println(v +"==>"+m_vList.get(v));
+		}
     }
     
     /**
@@ -446,6 +449,8 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
 			}
 		}
     	m_vList.get(v).color = dfsColor.black;
+    	//Here insert Vertex operation
+    	System.out.println(m_vList.get(v));
 	}
 
 	@Override
