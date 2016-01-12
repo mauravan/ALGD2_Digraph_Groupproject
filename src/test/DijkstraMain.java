@@ -1,6 +1,8 @@
-package digraph;
+package test;
 
 import java.util.HashMap;
+
+import digraph.Digraph;
 
 public class DijkstraMain {
 	

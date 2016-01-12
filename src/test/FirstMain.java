@@ -1,5 +1,6 @@
-package digraph;
+package test;
 
+import digraph.Digraph;
 
 public class FirstMain {
 
