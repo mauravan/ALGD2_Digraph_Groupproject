@@ -224,14 +224,6 @@ public interface IDigraph<V, E> {
 	int getNumberOfEdges();
 	
 
-	//TODO: Discuss if Euler and Hamilton Path are wanted..
-	
-	/**
-	 * 
-	 * @param vertex
-	 * @return a set of Vertices representing the shortest Path from origin to destination
-	 */
-	double getShortestPath(V origin, V desination);
 	
 	/**
 	 * 
@@ -239,6 +231,13 @@ public interface IDigraph<V, E> {
 	 * @return a set of Vertices representing the shortest Path from origin to destination
 	 */
 	HashMap<V, Double> dijkstra(V origin);
+	
+	/**
+     * depthFirstSearch to traverse through graph and create spanning tree.
+     * Time complexity: O(n+m)
+     * @return HashMap with vertex v as key and forerunner vertex v as value
+     */
+    void depthFirstSearch();
 	
 	
 }

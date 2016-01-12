@@ -338,20 +338,14 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
     }
 
     @Override
-    public double getShortestPath(V origin, V desination) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-    
-    @Override
     public HashMap<V, Double> dijkstra(V origin) {
         // BEGIN INIT
-        // D ist Hashmap mit Key = Vertex und Value = Wert des momentan k�rzesten Pfades von origin
+        // D ist Hashmap mit Key = Vertex und Value = Wert des momentan kuerzesten Pfades von origin
         // nach v.
-        // A enth�lt den Nachbarknoten �ber den der k�rzeste Pfad geht
+        // A enthaelt den Nachbarknoten ueber den der kuerzeste Pfad geht
         HashMap<V, Double> d = new HashMap<>();
         HashMap<V, V> a = new HashMap<>();
-        // Mit maximaler Anzahl initialisieren, damit immer k�rzere Pfade gefunden werden k�nnen
+        // Mit maximaler Anzahl initialisieren, damit immer kuerzere Pfade gefunden werden koennen
         for (V v : m_vList.keySet()) {
             d.put(v, Double.MAX_VALUE);
             a.put(v, null);
@@ -401,21 +395,16 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
         V u = m_eList.get(e).origin;
         V v = m_eList.get(e).destination;
         Edge edge = m_eList.get(e);
-        // pr�ft ob aktuelle strecke gr�sser ist als start-vertex und kantengewicht und ersetzt
+        // prueft ob aktuelle strecke groesser ist als start-vertex und kantengewicht und ersetzt
         if (d.get(v) > d.get(u) + edge.m_weight) {
             d.put(v, (d.get(u) + edge.m_weight));
-            a.put(v, u); // enth�lt den Nachbarknoten �ber den der k�rzeste Pfad geht
+            a.put(v, u); // enthaelt den Nachbarknoten ueber den der kuerzeste Pfad geht
             return true;
         }
         return false;
 
     }
     
-    /**
-     * depthFirstSearch to traverse through graph and create spanning tree.
-     * Time complexity: O(n+m)
-     * @return HashMap with vertex v as key and forerunner vertex v as value
-     */
     public void depthFirstSearch(){
     	HashMap<V, V> a = new HashMap<>();
     	for (V v : m_vList.keySet()) {
@@ -534,12 +523,13 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
      */
     private class Edge {
         private double m_weight;
-        // TODO: Delete if not needed!
         private V origin;
         private V destination;
 
         private E m_key_E;
-
+        
+        private static final int DEFAULT_WEIGHT = 1;
+        
         /**
          * Constructor for Edges. Destination and Origin have to be in the same graph
          * 
@@ -548,13 +538,24 @@ public class Digraph<V, E> implements IDigraph<V, E>, Serializable {
          * @param origin * Vertex from which the Edge comes. Can be same as destination.
          * @param destination Vertex to which the Edge goes. Can be same as origin.
          */
-        // TODO: Provide a static field DEFAULT_WEIGHT and a Constructor using
-        // only Vertex Origin or Vertex Destination
         private Edge(E key, double weight, V origin, V destination) {
             m_key_E = key;
             this.origin = origin;
             this.destination = destination;
             m_weight = weight;
+        }
+        
+        /**
+         * Construct an Edge with Default_Weight 1
+         * @param key
+         * @param origin
+         * @param destination
+         */
+        private Edge(E key, V origin, V destination) {
+            m_key_E = key;
+            this.origin = origin;
+            this.destination = destination;
+            m_weight = DEFAULT_WEIGHT;
         }
 
         /**

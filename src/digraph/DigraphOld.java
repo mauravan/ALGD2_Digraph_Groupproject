@@ -147,7 +147,6 @@ public class DigraphOld<V, E> {
     }
 
     public boolean removeEdge(int weight, V origin, V destination) {
-        // TODO: adjust outdeg
         Edge e = new Edge(weight, m_vList.get(origin), m_vList.get(destination));
         return m_vList.get(origin).adjacencyList.remove(e);
     }
@@ -246,7 +245,6 @@ public class DigraphOld<V, E> {
      */
     private class Edge {
         private int m_weight;
-        // TODO: Delete if not needed!
         private Vertex origin;
         private Vertex destination;
 
